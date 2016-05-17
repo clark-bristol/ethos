@@ -1,0 +1,33 @@
+<!-- https://docs.djangoproject.com/en/1.9/topics/class-based-views/generic-display/ -->
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+{% block content %}
+    <h2>Claims</h2>
+<!-- render all claims -->
+    {% for claim in object_list %}
+    	<!-- invisible outter box -->
+    	<div class="row" style="margin:0px 0px 20px">
+	    	<div class="col-6" style="clear:left;">
+	    		<div style="float:left">
+					<a href="{% url 'home' %}"><img src="{% static 'img/+.png' %}" style="float:left; clear: left; height:32px; padding:5px;"/></a>
+					<a href="{% url 'home' %}"><img src="{% static 'img/upvote.png' %}" style="float:left; clear: left; height:30px; padding:8px"/></a>
+					<p class="text-align-center" style="padding:0 ; margin:0px 0px 1px; font-size:20px">{{ claim.votes }}</p>
+					<a href="{% url 'home' %}"><img src="{% static 'img/downvote.png' %}" style="float:left; clear: left; height:30px; padding:8px"/></a>
+	    		</div>
+		    	<div class="col-md-5" style="float:left; padding:0; margin:0px 0px 30px">
+					<a href="{% url 'home' %}"><p style="padding:0 ; margin:0px 0px 1px; font-size:20px"><mark class="bkdcolor-lt-yel">{{ claim.title }}</mark></p></a>
+					<div class="claim-box"> {{ claim.claimcontent }} </div>
+					<a href="{% url 'home' %}"><p style="float:left; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-gra">{{ claim.tags.slugs }}</mark></p></a>
+					<a href="{% url 'home' %}"><p style="float:right; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-blu">{{ claim.user }}</mark></p></a>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+ {% endblock %}
+
+<!-- style="padding:0; margin:0" -->
+<!--  -->
