@@ -13,7 +13,8 @@
     	<div class="row" style="margin:0px 0px 20px">
 	    	<div class="col-6" style="clear:left;">
 	    		<div style="float:left">
-					<a href="{% url 'home' %}"><img src="{% static 'img/+.png' %}" style="float:left; clear: left; height:32px; padding:5px;"/></a>
+					<a onClick="javascript.affirm_claim();"><img src="{% static 'img/+.png' %}" style="float:left; clear: left; height:32px; padding:5px;"/></a>
+
 					<a href="{% url 'home' %}"><img src="{% static 'img/upvote.png' %}" style="float:left; clear: left; height:30px; padding:8px"/></a>
 					<p class="text-align-center" style="padding:0 ; margin:0px 0px 1px; font-size:20px">{{ claim.votes }}</p>
 					<a href="{% url 'home' %}"><img src="{% static 'img/downvote.png' %}" style="float:left; clear: left; height:30px; padding:8px"/></a>
@@ -27,6 +28,22 @@
 			</div>
 		</div>
 	{% endfor %}
+
+	<script type="text/javascript">
+		var affirm_claim = function() {
+			var title = $("#title").val()
+			var slug = $("#slug").val()
+			if (title != "" && slug != "") {
+				var data = { title:title, slug:slug };
+				var args = { type:"POST", url:"/browseClaims/", data:data, complete:done };
+			$.ajax(args);
+			}
+			else {
+				// display an explanation of failure
+			}
+			return false;
+		};
+	</script>
  {% endblock %}
 
 <!-- style="padding:0; margin:0" -->
