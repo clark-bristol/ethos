@@ -51,14 +51,12 @@ def addClaim(request):
 from django.views.generic.list import ListView
 from claims.models import Claim
 
-# class ClaimList(ListView):
-#     model = Claim
 class ClaimListView(ListView):
     model = Claim
 
-    def get_context_data(self, **kwargs):
-        context = super(ClaimListView, self).get_context_data(**kwargs)
-        return context
+def get_context_data(self, **kwargs):
+    context = super(ClaimListView, self).get_context_data(**kwargs)
+    return context
 
 
 

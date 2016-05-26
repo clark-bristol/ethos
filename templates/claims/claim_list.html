@@ -11,15 +11,31 @@
     {% for claim in object_list %}
     	<!-- invisible outter box -->
     	<div class="row" style="margin:0px 0px 20px">
-	    	<div class="col-6" style="clear:left;">
-	    		<div style="float:left">
-					<a onClick="javascript.affirm_claim();"><img src="{% static 'img/+.png' %}" style="float:left; clear: left; height:32px; padding:5px;"/></a>
-
-					<a href="{% url 'home' %}"><img src="{% static 'img/upvote.png' %}" style="float:left; clear: left; height:30px; padding:8px"/></a>
-					<p class="text-align-center" style="padding:0 ; margin:0px 0px 1px; font-size:20px">{{ claim.votes }}</p>
-					<a href="{% url 'home' %}"><img src="{% static 'img/downvote.png' %}" style="float:left; clear: left; height:30px; padding:8px"/></a>
+	    	<div class="col-12" style="clear:left;">
+	    		<div class="col-md-1" style="float:left">
+					<div style="width:100% ; float:left ; clear:right ; text-align: center">
+						<a style="display: inline-block" onClick="{% url 'home' %}">
+							<img src="{% static 'img/+.png' %}" class="float-center" style="height:32px; padding:5px;"/>
+						</a>
+					</div>
+					<div style="width:100% ; float:left ; clear:right ; text-align: center">
+						<a style="display: inline-block" href="{% url 'home' %}">
+							<img src="{% static 'img/upvote.png' %}"  style="height:30px; padding:8px;"/>
+						</a>
+					</div>
+					<div style="width:100% ; float:left ; clear:right">
+						<p style="font-size:20px ; text-align: center ; margin:0">{{ claim.votes }}
+						</p>
+					</div>
+					<div style="width:100% ; float:left ; clear:right ; text-align: center">
+						<a style="display: inline-block" href="{% url 'home' %}">
+							<img src="{% static 'img/downvote.png' %}" style="float: left; clear: left; height:30px; padding:8px"/>
+						</a>
+					</div>
+					<!-- 
+					 -->
 	    		</div>
-		    	<div class="col-md-5" style="float:left; padding:0; margin:0px 0px 30px">
+		    	<div class="col-md-11" style="float:left; padding:0; margin:0px 0px 30px">
 					<a href="{% url 'home' %}"><p style="padding:0 ; margin:0px 0px 1px; font-size:20px"><mark class="bkdcolor-lt-yel">{{ claim.title }}</mark></p></a>
 					<div class="claim-box"> {{ claim.claimcontent }} </div>
 					<a href="{% url 'home' %}"><p style="float:left; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-gra">{{ claim.tags.slugs }}</mark></p></a>
