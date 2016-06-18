@@ -1,12 +1,12 @@
 {% load i18n %}
 {% trans "Activate account at" %} {{ site.name }}:
 
-Hello there!
+Welcome to Ethos!
 
-Click the link below to activate your account.
+To activate your account, click here:
 
 http://{{ site.domain }}{% url 'registration_activate' activation_key %}
 
-{% blocktrans %}Link is valid for {{ expiration_days }} days.{% endblocktrans %}
+—Management
 
-—Posit Project Team
+(If you did not attempt to create an account, please ignore this email and your address will be removed from our records.)
