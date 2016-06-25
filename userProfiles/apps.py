@@ -9,3 +9,9 @@ from django.apps import AppConfig
 
 class userProfilesConfig(AppConfig):
     name = 'userProfiles'
+    verbose_name = 'User Profiles'
+
+    def ready(self):
+
+    	# import signal handlers
+    	import userProfiles.signals

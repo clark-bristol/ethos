@@ -22,6 +22,8 @@ def addClaim(request):
 
 		#increment authority
 		user_id = request.user.id
+		print(user_id)
+		print(User.objects.get(pk = user_id))
 		user = User.objects.get(pk = user_id).standarduser
 		user.authority += 1
 		user.save()
