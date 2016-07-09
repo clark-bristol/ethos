@@ -14,23 +14,20 @@
 	    	<div class="col-12" style="clear:left;">
 	    		<div class="col-md-1" style="float:left">
 					<div style="width:100% ; float:left ; clear:right ; text-align: center">
-						<a style="display: inline-block" onClick="{% url 'home' %}">
-							<img src="{% static 'img/+.png' %}" class="float-center" style="height:32px; padding:5px;"/>
-						</a>
+						<div id="affirm_button" class="fa fa-plus fa-2x float-center" style="display: inline-block; color:black; padding:5px;">
+						</div>
 					</div>
 					<div style="width:100% ; float:left ; clear:right ; text-align: center">
-						<a style="display: inline-block" href="{% url 'home' %}">
-							<img src="{% static 'img/upvote.png' %}"  style="height:30px; padding:8px;"/>
-						</a>
+						<div id="upvote" class="fa fa-sort-up fa-2x float-center" style="display: inline-block; color:black; padding:5px;">
+						</div>
 					</div>
 					<div style="width:100% ; float:left ; clear:right">
 						<p style="font-size:20px ; text-align: center ; margin:0">{{ claim.votes }}
 						</p>
 					</div>
 					<div style="width:100% ; float:left ; clear:right ; text-align: center">
-						<a style="display: inline-block" href="{% url 'home' %}">
-							<img src="{% static 'img/downvote.png' %}" style="float: left; clear: left; height:30px; padding:8px"/>
-						</a>
+						<div id="downvote" class="fa fa-sort-down fa-2x float-center" style="display: inline-block; color:black; padding:5px;">
+						</div>
 					</div>
 					<!-- 
 					 -->
@@ -45,21 +42,21 @@
 		</div>
 	{% endfor %}
 
-	<script type="text/javascript">
-		var affirm_claim = function() {
-			var title = $("#title").val()
-			var slug = $("#slug").val()
-			if (title != "" && slug != "") {
-				var data = { title:title, slug:slug };
-				var args = { type:"POST", url:"/browseClaims/", data:data, complete:done };
-			$.ajax(args);
-			}
-			else {
-				// display an explanation of failure
-			}
-			return false;
-		};
-	</script>
+<!-- <script type="text/javascript">
+	// 	var affirm_claim = function() {
+	// 		var title = $("#title").val()
+	// 		var slug = $("#slug").val()
+	// 		if (title != "" && slug != "") {
+	// 			var data = { title:title, slug:slug };
+	// 			var args = { type:"POST", url:"/browseClaims/", data:data, complete:done };
+	// 		$.ajax(args);
+	// 		}
+	// 		else {
+	// 			// display an explanation of failure
+	// 		}
+	// 		return false;
+	// 	};
+	</script>-->
  {% endblock %}
 
 <!-- style="padding:0; margin:0" -->
