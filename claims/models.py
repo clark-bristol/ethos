@@ -4,8 +4,8 @@ from taggit.managers import TaggableManager #http://django-taggit.readthedocs.or
 
 # Create your models here.
 class Claim(models.Model):
-	title = models.CharField(max_length=120, blank=False, null=True)
-	claimcontent = models.CharField(max_length=1000, blank=False, null=True)
+	name = models.CharField(max_length=120, blank=False, null=True)
+	content = models.CharField(max_length=1000, blank=False, null=True)
 	source = models.CharField(max_length=120, blank=False, null=True)
 	timestamp = models.DateTimeField(auto_now_add=True,auto_now=False)
 	updated = models.DateTimeField(auto_now_add=False,auto_now=True)
@@ -13,3 +13,6 @@ class Claim(models.Model):
 	user = models.CharField(max_length=120, blank=False, null=True)
 	votes = models.IntegerField(blank=False, default=0)
 	tags = TaggableManager() #http://django-taggit.readthedocs.org/en/latest/getting_started.html
+
+
+

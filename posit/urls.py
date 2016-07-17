@@ -18,15 +18,18 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from claims.views import ClaimListView
+from claims.views import ClaimListView
 import userProfiles.regbackend
 
 urlpatterns = [
     url(r'^$', 'posit.views.home', name='home'),
-    url(r'^contributeClaim/$', 'claims.views.addClaim', name='contributeClaim'),
-    url(r'^browseClaims/$', ClaimListView.as_view(), name='browseClaims'),
     url(r'^about/$', 'posit.views.about', name='about'),
-    url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^admin/', admin.site.urls),
+    url(r'^claims/contribute/$', 'claims.views.addClaim', name='contributeClaim'),
+    url(r'^claims/$', ClaimListView.as_view(), name='browseClaims'),
+    url(r'^claims/(?P<claim_id>[0-9]{1,10})/', 'claims.views.viewClaim', name='viewClaim'),
+    url(r'^meta/$', 'posit.views.meta', name='meta'),
 ]
 
 if settings.DEBUG:

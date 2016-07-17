@@ -14,3 +14,6 @@ def home(request):
 
 def about(request):
 	return render(request, "about.html", {})
+
+def meta(request):
+	return render(request, "meta.html", {})

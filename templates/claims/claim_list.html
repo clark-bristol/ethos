@@ -33,8 +33,8 @@
 					 -->
 	    		</div>
 		    	<div class="col-md-11" style="float:left; padding:0; margin:0px 0px 30px">
-					<a href="{% url 'home' %}"><p style="padding:0 ; margin:0px 0px 1px; font-size:20px"><mark class="bkdcolor-lt-yel">{{ claim.title }}</mark></p></a>
-					<div class="claim-box"> {{ claim.claimcontent }} </div>
+					<a href="{% url 'viewClaim' claim.id %}"><p style="padding:0 ; margin:0px 0px 1px; font-size:20px"><mark class="bkdcolor-lt-yel">{{ claim.name }}</mark></p></a>
+					<div class="claim-box"> {{ claim.content }} </div>
 					<a href="{% url 'home' %}"><p style="float:left; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-gra">{{ claim.tags.slugs }}</mark></p></a>
 					<a href="{% url 'home' %}"><p style="float:right; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-blu">{{ claim.user }}</mark></p></a>
 				</div>
@@ -44,10 +44,10 @@
 
 <!-- <script type="text/javascript">
 	// 	var affirm_claim = function() {
-	// 		var title = $("#title").val()
+	// 		var name = $("#name").val()
 	// 		var slug = $("#slug").val()
-	// 		if (title != "" && slug != "") {
-	// 			var data = { title:title, slug:slug };
+	// 		if (name != "" && slug != "") {
+	// 			var data = { name:name, slug:slug };
 	// 			var args = { type:"POST", url:"/browseClaims/", data:data, complete:done };
 	// 		$.ajax(args);
 	// 		}

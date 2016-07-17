@@ -5,4 +5,4 @@ from django.contrib.auth.models import User
 class ClaimForm(forms.ModelForm):
 	class Meta:
 		model = Claim
-		fields = ['title', 'claimcontent', 'source', 'tags']
+		fields = ['name', 'content', 'source', 'tags']

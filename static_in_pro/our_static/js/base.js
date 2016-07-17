@@ -5,7 +5,7 @@
 // 	$('div').switchClass("fa-plus","")
 // });
 
-$(function(){
+$(document).ready(function(){
 	// $('#affirm_plus').fadeOut();
 	$('.fa-plus').click(function(){
 		// $('.fa-plus').fadeOut();

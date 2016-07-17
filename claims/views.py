@@ -3,14 +3,16 @@ from .forms import ClaimForm
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.models import User
+# EXPERIMENT W/ NEO4J
+from py2neo import authenticate, Graph, Node
 
 def addClaim(request):
 	title = "Make a Claim"
 	form = ClaimForm(request.POST or None)
 	if form.is_valid():
 		#get stuff from form
-		form_title = form.cleaned_data.get("title")
-		form_claim = form.cleaned_data.get("claimcontent")
+		form_name = form.cleaned_data.get("name")
+		form_content = form.cleaned_data.get("content")
 		form_source = form.cleaned_data.get("source")
 
 		#save to database
@@ -34,13 +36,20 @@ def addClaim(request):
 		to_email = ["clarkbristol@gmail.com"]
 		contact_message = """
 			%s: %s
-			""" % (form_title,form_claim)
+			""" % (form_name,form_content)
 		send_mail(subject,
 			contact_message,
 			from_email,
 			to_email,
 			fail_silently=False)
-		return redirect("http://localhost:8000/browseClaims/")
+
+		# make a neo4j node
+		authenticate("localhost:7474", "neo4j", "cbristol")
+		graph = Graph()
+		claim = Node("Claim", name=form_name, content=form_content)
+		graph.create(claim)
+		
+		return redirect("http://localhost:8000/claims/")
 	
 	context = {
 		"form": form,
@@ -48,6 +57,16 @@ def addClaim(request):
 	}
 
 	return render(request, "forms.html", context)
+
+
+
+def viewClaim(request,claim_id):
+	try:
+		c = Claim.objects.get(pk=claim_id)
+	except Claim.DoesNotExist:
+		raise Http404("Claim does not exist")
+	return render(request, "claims/viewClaim.html", {'claim': c})	
+
 
 
 from django.views.generic.list import ListView
