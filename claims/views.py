@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 # EXPERIMENT W/ NEO4J
 from py2neo import authenticate, Graph, Node
 
+
 def addClaim(request):
 	title = "Make a Claim"
 	form = ClaimForm(request.POST or None)
@@ -36,7 +37,7 @@ def addClaim(request):
 		to_email = ["clarkbristol@gmail.com"]
 		contact_message = """
 			%s: %s
-			""" % (form_name,form_content)
+			""" % (form_name, form_content)
 		send_mail(subject,
 			contact_message,
 			from_email,
@@ -58,6 +59,7 @@ def addClaim(request):
 
 	return render(request, "forms.html", context)
 
+
 def viewClaim(request, claim_id):
 	try:
 		c = Claim.objects.get(pk=claim_id)
@@ -71,7 +73,7 @@ from django.views.generic.list import ListView
 from claims.models import Claim
 
 class ClaimListView(ListView):
-    model = Claim
+	model = Claim
 
 def get_context_data(self, **kwargs):
     context = super(ClaimListView, self).get_context_data(**kwargs)
