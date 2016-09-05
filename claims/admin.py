@@ -5,7 +5,7 @@ from claims.forms import ClaimForm
 
 # Register your models here.
 class ClaimAdmin(admin.ModelAdmin):
-    list_display = ["name", "source", "timestamp", "updated", "id", "user", "user_id", "votes"]
+    list_display = ["id", "name", "created", "updated", "contrib_user_id", "affirmations"]
     form = ClaimForm
 
     class Meta:

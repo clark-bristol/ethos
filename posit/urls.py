@@ -44,6 +44,8 @@ urlpatterns = [
     url(r'^$', 'posit.views.home', name='home'),
     url(r'^about/$', 'posit.views.about', name='about'),
     url(r'^accounts/', include('registration.backends.default.urls')),
+    # https://django-grappelli.readthedocs.io/en/latest/quickstart.html#installation
+    url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
     url(r'^admin/', admin.site.urls),
     url(r'^claims/contribute/$', 'claims.views.addClaim', name='contributeClaim'),
     # urls for claims, including a PATTERN that passes data to the view!

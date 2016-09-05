@@ -15,4 +15,4 @@ from claims.models import Claim
 class ClaimSerializer(serializers.ModelSerializer):
     class Meta:
         model = Claim
-        fields = ('name', 'content', 'source', 'user_id', 'votes', 'user')
+        fields = ('name', 'content', 'contrib_user_id', 'affirmations')
