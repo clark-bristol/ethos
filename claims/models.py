@@ -9,10 +9,17 @@ from django.contrib.auth.models import User
 class Claim(models.Model):
     name = models.CharField(max_length=120, blank=False, null=True)
     content = models.CharField(max_length=1000, blank=False, null=True)
-    contrib_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    contrib_user = models.ForeignKey(User, on_delete=models.CASCADE)
     # source = models.CharField(max_length=120, blank=False, null=True)
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     # user = models.CharField(max_length=120, blank=False, null=True)
-    affirmations = models.IntegerField(blank=False, default=0)
+    # num_affirmations = models.IntegerField(blank=False, default=0)
     # tags = TaggableManager()  # http://django-taggit.readthedocs.org/en/latest/getting_started.html
+
+
+# Create your models here.
+class Affirmation(models.Model):
+    claim = models.ForeignKey(Claim)
+    user = models.ForeignKey(User)
+    created = models.DateTimeField(auto_now_add=True, auto_now=False)

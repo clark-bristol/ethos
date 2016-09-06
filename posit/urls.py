@@ -50,7 +50,7 @@ urlpatterns = [
     url(r'^claims/contribute/$', 'claims.views.addClaim', name='contributeClaim'),
     # urls for claims, including a PATTERN that passes data to the view!
     url(r'^claims/$', ClaimListView.as_view(), name='browseClaims'),
-    url(r'^claims/(?P<claim_id>[0-9]{1,10})/', 'claims.views.viewClaim', name='viewClaim'),
+    url(r'^claims/(?P<claim>[0-9]{1,10})/', 'claims.views.viewClaim', name='viewClaim'),
     url(r'^meta/$', 'posit.views.meta', name='meta'),
     # urls for the REST API
     url(r'^api/', include(router.urls)),
