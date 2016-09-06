@@ -6,8 +6,12 @@ from py2neo import authenticate, Graph, Node, Relationship
 #
 from django.views.generic.list import ListView
 from claims.models import Claim, Affirmation
+# import decorators for experimenting
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def addClaim(request):
     form = ClaimForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
