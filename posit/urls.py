@@ -18,7 +18,8 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.models import User
-from claims.views import ClaimListView
+from posit import views as posit_views
+from claims import views as claims_views
 from rest_framework import routers, serializers, viewsets  # for REST API thing
 # import userProfiles.regbackend
 
@@ -41,17 +42,17 @@ router.register(r'users', UserViewSet)
 
 
 urlpatterns = [
-    url(r'^$', 'posit.views.home', name='home'),
-    url(r'^about/$', 'posit.views.about', name='about'),
+    url(r'^$', posit_views.home, name='home'),
+    url(r'^about/$', posit_views.about, name='about'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     # https://django-grappelli.readthedocs.io/en/latest/quickstart.html#installation
     url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
     url(r'^admin/', admin.site.urls),
-    url(r'^claims/contribute/$', 'claims.views.addClaim', name='contributeClaim'),
+    url(r'^claims/contribute/$', claims_views.addClaim, name='contributeClaim'),
     # urls for claims, including a PATTERN that passes data to the view!
-    url(r'^claims/$', ClaimListView.as_view(), name='browseClaims'),
-    url(r'^claims/(?P<claim>[0-9]{1,10})/', 'claims.views.viewClaim', name='viewClaim'),
-    url(r'^meta/$', 'posit.views.meta', name='meta'),
+    url(r'^claims/$', claims_views.ClaimListView.as_view(), name='browseClaims'),
+    url(r'^claims/(?P<claim>[0-9]{1,10})/', claims_views.viewClaim, name='viewClaim'),
+    url(r'^meta/$', posit_views.meta, name='meta'),
     # urls for the REST API
     url(r'^api/', include(router.urls)),
     url(r'^api/api-auth/', include('rest_framework.urls'), name='rest_framework')

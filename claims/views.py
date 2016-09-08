@@ -55,9 +55,12 @@ def addClaim(request):
 def viewClaim(request, claim):
     try:
         c = Claim.objects.get(pk=claim)
+        affirmations = Affirmation.objects.filter(claim_id=claim).count()
+        contrib_user_name = User.objects.get(id=c.contrib_user_id).username
     except Claim.DoesNotExist:
         raise Http404("Claim does not exist")
-    return render(request, "claims/viewClaim.html", {'claim': c})
+
+    return render(request, "claims/viewClaim.html", {'claim': c, 'affirmations': affirmations, 'contrib_user_name': contrib_user_name})
 
 
 class ClaimListView(ListView):

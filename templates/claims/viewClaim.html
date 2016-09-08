@@ -6,23 +6,102 @@
 
 
 {% block content %}
-	<div class="row">
-		<div class="col-12">
-			<div class="col-md-1" style="float:left">
-				<div style="width:100% ; float:left ; clear:right ; text-align: center">
-					<div id="affirm_button" class="fa fa-plus fa-2x float-center" style="display: inline-block; color:black; padding:5px;">
-					</div>
-				</div>
-				<div style="width:100% ; float:left ; clear:right">
-					<p style="font-size:20px ; text-align: center ; margin:0">{{ claim.affirmation }}
-					</p>
+	<div class="box">
+		<div class="columns">
+			<div class="column is-12">
+				<h2><strong>Claim</strong></h2>
+			</div>
+		</div>
+		<div class="columns">
+			<div class="column is-8">
+				<div class="box">
+					<article class="media">
+						<div class="media-left">
+							<div class="affirm_button fa fa-plus icon is-medium" id="affirm_button">
+							</div>
+							<p style="font-size:20px ; text-align: center ; margin:0">
+							{{ affirmations }}
+							{# {{ claim.affirmation }} #}
+							</p>
+						</div>
+						<div class="media-content">
+							<div class="content">
+								<p>
+								<strong><a style="font-size:20px" href="{% url 'viewClaim' claim.id %}">{{ claim.name }}</a></strong>
+								<br>
+								{{ claim.content }}
+								</p>
+								<small>Contributed by: {{ contrib_user_name }}</small>
+							</div>
+						</div>
+					</article>
 				</div>
 			</div>
-	    	<div class="col-md-11" style="float:left; padding:0; margin:0px 0px 30px">
-				<a href="{% url 'viewClaim' claim.id %}"><p style="padding:0 ; margin:0px 0px 1px; font-size:20px"><mark class="bkdcolor-lt-yel">{{ claim.name }}</mark></p></a>
-				<div class="claim-box"> {{ claim.content }} </div>
-				<a href="{% url 'home' %}"><p style="float:left; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-gra">{{ claim.tags.slugs }}</mark></p></a>
-				<a href="{% url 'home' %}"><p style="float:right; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-blu">{{ claim.user }}</mark></p></a>
+			<div class="column is-4">
+				<h3>Definitions</h3>
+				<div class="box">
+					<article class="media">
+						<div class="media-content">
+							<div class="content">
+								<p>
+								<strong><a style="font-size:20px" href="{% url 'viewClaim' claim.id %}">This Term</a></strong>
+								<br>
+								This term appears in the claim at left but appears elsewhere with a (hopefully slightly) different meaning. This is where the precise definition used here appears.
+								</p>
+								<small>Contributed by: {{ contrib_user_name }}</small>
+							</div>
+						</div>
+					</article>
+				</div>
+				<div class="box">
+					<article class="media">
+						<div class="media-content">
+							<div class="content">
+								<p>
+								<strong><a style="font-size:20px" href="{% url 'viewClaim' claim.id %}">This Other Term</a></strong>
+								<br>
+								This other term appers in the claim at left and requires a little bit more detail.
+								</p>
+								<small>Contributed by: {{ contrib_user_name }}</small>
+							</div>
+						</div>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="columns">
+		<div class="column is-8">
+			<div class="box">
+				<h3><strong>Arguments in Favor</strong></h3>
+				<div class="box">
+					<article class="media">
+						<div class="media-left">
+							<div class="affirm_button fa fa-plus icon is-medium" id="affirm_button">
+							</div>
+							<p style="font-size:20px ; text-align: center ; margin:0">
+							{{ affirmations }}
+							{# {{ claim.affirmation }} #}
+							</p>
+						</div>
+						<div class="media-content">
+							<div class="content">
+								<p>
+								<strong><a style="font-size:20px" href="{% url 'viewClaim' claim.id %}">{{ claim.name }}</a></strong>
+								<br>
+								{{ claim.content }}
+								</p>
+								<small>Contributed by: {{ contrib_user_name }}</small>
+							</div>
+						</div>
+					</article>
+				</div>
+			</div>
+		</div>
+		<div class="column is-4">
+			<div class="box">
+				<h3><strong>Ethoi</strong></h3>
+				<p>?!?! These are TBD</p>
 			</div>
 		</div>
 	</div>

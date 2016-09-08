@@ -11,7 +11,7 @@
     {% for claim in object_list %}
     	<!-- invisible outter box -->
     	<div class="row" style="margin:0px 0px 20px">
-	    	<div class="col-12" style="clear:left;">
+	    	<div class="col-8" style="clear:left;">
 	    		<div class="col-md-1" style="float:left">
 					<div style="width:100% ; float:left ; clear:right ; text-align: center">
 						<div id="affirm_button" class="fa fa-plus fa-2x float-center" style="display: inline-block; color:black; padding:5px;">
@@ -22,7 +22,7 @@
 						</p>
 					</div>
 	    		</div>
-		    	<div class="col-md-11" style="float:left; padding:0; margin:0px 0px 30px">
+		    	<div class="col-md-7" style="float:left; padding:0; margin:0px 0px 30px">
 					<a href="{% url 'viewClaim' claim.id %}"><p style="padding:0 ; margin:0px 0px 1px; font-size:20px"><mark class="bkdcolor-lt-yel">{{ claim.name }}</mark></p></a>
 					<div class="claim-box"> {{ claim.content }} </div>
 					<a href="{% url 'home' %}"><p style="float:left; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-gra">{{ claim.tags.slugs }}</mark></p></a>
