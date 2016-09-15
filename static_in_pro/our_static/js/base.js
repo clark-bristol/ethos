@@ -8,9 +8,8 @@
 $(document).ready(function(){
 	// $('#affirm_plus').fadeOut();
 	$('.fa-plus').click(function(){
-		// $('.fa-plus').fadeOut();
+        $.post('/affirmations/' + $(this).data().id + '/', {});
 		$(this).toggleClass('fa-plus fa-check');
-		// $('.fa-check').switchClass('.fa-check','fa-plus',1000);
 	});
 });
 

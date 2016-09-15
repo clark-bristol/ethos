@@ -17,45 +17,30 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.models import User
 from posit import views as posit_views
+from claims.models import Affirmation
 from claims import views as claims_views
 from rest_framework import routers, serializers, viewsets  # for REST API thing
 # import userProfiles.regbackend
 
 
-# Serializers define the API representation.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'is_staff')
-
-
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-# Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
-
-
 urlpatterns = [
-    url(r'^$', posit_views.home, name='home'),
-    url(r'^about/$', posit_views.about, name='about'),
+    # Homepage
+    url(r'^$', posit_views.home, kwargs=None, name='home'),
+    # About and Meta pages
+    url(r'^about/$', posit_views.about, kwargs=None, name='about'),
+    url(r'^meta/$', posit_views.meta, kwargs=None, name='meta'),
+    # Account-related URLs for Django-Registration-Redux
     url(r'^accounts/', include('registration.backends.default.urls')),
-    # https://django-grappelli.readthedocs.io/en/latest/quickstart.html#installation
-    url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
-    url(r'^admin/', admin.site.urls),
-    url(r'^claims/contribute/$', claims_views.addClaim, name='contributeClaim'),
-    # urls for claims, including a PATTERN that passes data to the view!
-    url(r'^claims/$', claims_views.ClaimListView.as_view(), name='browseClaims'),
-    url(r'^claims/(?P<claim>[0-9]{1,10})/', claims_views.viewClaim, name='viewClaim'),
-    url(r'^meta/$', posit_views.meta, name='meta'),
+    # claims
+    url(r'^claims/contribute/$', claims_views.addClaim, kwargs=None, name='contributeClaim'),
+    url(r'^claims/$', claims_views.ClaimListView.as_view(), kwargs=None, name='browseClaims'),
+    url(r'^claims/(?P<claim>[0-9]{1,10})/', claims_views.viewClaim, kwargs=None, name='viewClaim'),
     # urls for the REST API
-    url(r'^api/', include(router.urls)),
-    url(r'^api/api-auth/', include('rest_framework.urls'), name='rest_framework')
+    url(r'^api/', include('claims.urls')),
+    # Admin-related URLs (including Grappelli)
+    url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^admin/', admin.site.urls, kwargs=None, name=None),
 ]
 
 if settings.DEBUG:
