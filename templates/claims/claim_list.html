@@ -6,48 +6,39 @@
 
 
 {% block content %}
-    <h2>Claims</h2>
-<!-- render all claims -->
-    {% for claim in object_list %}
-    	<!-- invisible outter box -->
-    	<div class="row" style="margin:0px 0px 20px">
-	    	<div class="col-8" style="clear:left;">
-	    		<div class="col-md-1" style="float:left">
-					<div style="width:100% ; float:left ; clear:right ; text-align: center">
-						<div id="affirm_button" class="fa fa-plus fa-2x float-center" style="display: inline-block; color:black; padding:5px;">
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Claims</h3>
+				</div>
+				<div class="panel-body">
+					{% for claim in object_list %}
+					<div class="row">
+						<div class="col-md-12">
+							<div class="media">
+								<div class="media-left">
+									<span class="media-object fa fa-plus fa-2x" data-id="{{ claim.id }}" id="affirm_button"></span>
+									<h4 class="media-heading text-center">{{ affirmations }}</h4>
+								</div>
+								<div class="media-body">
+									<div class="content">
+										<h4 class="media-heading"><a href="{% url 'viewClaim' claim.id %}">{{ claim.id }}: {{ claim.name }}</a></h4>
+										<p>{{ claim.content }}</p>
+										<small>Contributed by: {{ creator_user_name }}</small>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div style="width:100% ; float:left ; clear:right">
-						<p style="font-size:20px ; text-align: center ; margin:0">{{ claim.affirmation }}
-						</p>
-					</div>
-	    		</div>
-		    	<div class="col-md-7" style="float:left; padding:0; margin:0px 0px 30px">
-					<a href="{% url 'viewClaim' claim.id %}"><p style="padding:0 ; margin:0px 0px 1px; font-size:20px"><mark class="bkdcolor-lt-yel">{{ claim.name }}</mark></p></a>
-					<div class="claim-box"> {{ claim.content }} </div>
-					<a href="{% url 'home' %}"><p style="float:left; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-gra">{{ claim.tags.slugs }}</mark></p></a>
-					<a href="{% url 'home' %}"><p style="float:right; padding:0; margin:1px 0px 0px"><mark class="bkdcolor-lt-blu">{{ claim.user }}</mark></p></a>
+					{% endfor %}
 				</div>
 			</div>
 		</div>
-	{% endfor %}
+	</div>
+</div>
 
-<!-- <script type="text/javascript">
-	// 	var affirm_claim = function() {
-	// 		var name = $("#name").val()
-	// 		var slug = $("#slug").val()
-	// 		if (name != "" && slug != "") {
-	// 			var data = { name:name, slug:slug };
-	// 			var args = { type:"POST", url:"/browseClaims/", data:data, complete:done };
-	// 		$.ajax(args);
-	// 		}
-	// 		else {
-	// 			// display an explanation of failure
-	// 		}
-	// 		return false;
-	// 	};
-	</script>-->
- {% endblock %}
+{% endblock %}
 
-<!-- style="padding:0; margin:0" -->
-<!--  -->

@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 class Claim(models.Model):
     name = models.CharField(max_length=120, blank=False, null=True)
     content = models.CharField(max_length=1000, blank=False, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator_user = models.ForeignKey(User, on_delete=models.CASCADE)
     # source = models.CharField(max_length=120, blank=False, null=True)
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
@@ -25,4 +25,4 @@ class Affirmation(models.Model):
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
 
     class Meta:
-        unique_together = ('claim', 'user',)
+        unique_together = ('claim', 'user')
