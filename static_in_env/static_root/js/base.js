@@ -2,7 +2,6 @@
 
 
 // javascript function to acquire CSRF Token (dependent upon jQuery)
-// to use: var csrftoken = getCookie('csrftoken');
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -19,26 +18,42 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// set the header on my AJAX request and protect CSRF token from being sent to other domains
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
 
 // behavior for claim plus: switch to check and create affirmation
 $(document).ready(function(){
-	$('.fa-plus').click(function(){
-        // $.post('/affirmations/' + $(this).data().id + '/', {});
-        $.ajax({
-            url : "localhost:8000/api/affirmations/", // the endpoint
-            type : "POST", // http method
-            data : { claim : 110, user : 3 }, // data sent with the post request
-
-            // handle a successful response
-            success : function() {
-                $(this).toggleClass('fa-plus fa-check');
-            },
-
-            // handle a non-successful response
-            error : function() {
-                $(this).toggleClass('fa-plus fa-car');
+    var csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
+        }
+    });
+	$('.fa-plus').click(function(){
+        console.log("About to toggle!");
+        $(this).toggleClass('fa-plus fa-check');
+        console.log("Toggled!");
+        // $.post('/affirmations/' + $(this).data().id + '/', {});
+        var data = JSON.stringify({ "claim" : 128, "user" : 4, "csrf_token" : csrftoken });
+        console.log(data);
+        console.log("About to post!");
+        $.ajax({
+            "type": "POST",
+            "dataType": "json",
+            "url": "http://localhost:8000/api/affirmations/",
+            "data": data,
+            "contentType": "application/json",
+            "success": function(result) {
+                console.log("YASS!");
+            },
         });
+        console.log("Posted!");
 		// $(this).toggleClass('fa-plus fa-check');
 	});
 });

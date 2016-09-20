@@ -1,0 +1,13 @@
+<div class="well well-lg">
+    <div class="media-left">
+        <span class="media-object fa fa-plus fa-2x" data-id="{{ claim.id }}" id="affirm_button"></span>
+        <h4 class="media-heading text-center">{{ affirmations }}</h4>
+    </div>
+    <div class="media-body">
+        <div class="content">
+            <h4 class="media-heading"><a href="{% url 'viewClaim' claim.id %}">{{ claim.name }}</a></h4>
+            <p>{{ claim.content }}</p>
+            <small>Contributed by: {{ creator_user_name }}</small>
+        </div>
+    </div>
+</div>

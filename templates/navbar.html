@@ -3,86 +3,64 @@
 <!-- Static navbar -->
 <nav class="navbar navbar-default navbar-static-top" style="background-color:white">
   <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <!-- <img src="{% static 'img/posit.png' %}" alt="[logo]"> -->
-      <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/logo text.png' %}" style="height:22px"/></a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <!-- BROWSE DROPDOWN -->
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Browse<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="{% url 'browseClaims' %}">Claims</a></li>
-            {# <li><a href="{% url 'home' %}">Claims</a></li> #}
-            <li><a href="#">Arguments</a></li>
-            <li><a href="#">Ethoi</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="{% url 'about' %}">About</a></li>
-            <li><a href="{% url 'meta' %}">Meta</a></li>
-          </ul>
-        </li>
-        <!-- CONTRIBUTE DROPDOWN -->
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contribute<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="{% url 'contributeClaim' %}">Claims</a></li>
-            <li><a href="#">Arguments</a></li>
-            <li><a href="#">Ethoi</a></li>
-          </ul>
-        </li>
-        <!-- SEARCH BOX -->
-        <li>
-          <form class="navbar-form navbar-left" role="search">
-              <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Search">
-              </div>
-          </form>
-        </li>
-      </ul>
-      <!-- RIGHT END OF NAVBAR -->
-      <ul class="nav navbar-nav navbar-right">
-        <!-- right side of navbar when user is logged in -->
-        {% if request.user.is_authenticated %}
-          <!-- USERNAME DROPDOWN -->
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user }} (+{{request.user.standarduser.authority}}) <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Positions</a></li>
-              <li><a href="#">Contributions</a></li>
-              <li role="separator" class="divider"></li>
-              <li class="dropdown-header">Visualizations</li>
-              <li><a href="#">My Viewcloud</a></li>
-              <li><a href="#">Community Viewcloud</a></li>
-            </ul>
-          </li>
-          <!-- LOGOUT BUTTON -->
-          <li><a href="{% url 'auth_logout' %}">Logout</a></li>
-        <!-- right side of navbar when user is not logged in and not on login page -->
-        {% elif not "/accounts/login" in request.get_full_path %}
-          <!-- LOGIN DROPDOWN -->
-          <li class="dropdown">
-            <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login<strong class="caret"></strong></a>
-            <div class="dropdown-menu" style="padding-right:15px;">
-              <form class='navbar-form navbar-right' method='POST' action='{% url "auth_login" %}'>{% csrf_token%}
-                <input style="margin-bottom:10px" type='text' class='form-control' name='username' placeholder='Username' />
-                <input style="margin-bottom:10px" type='password' class='form-control' name='password' placeholder='Password' />
-                <button style="width: 100%" type='submit' class='btn btn-primary'>Login</button>
-              </form>
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% static 'img/logo text.png' %}" style="height:18px"/></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'meta' %}">Meta</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Claims</a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'browseClaims' %}">Browse</a></li>
+          <li><a href="{% url 'contributeClaim' %}">Contribute</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Arguments</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Browse</a></li>
+          <li><a href="#">Contribute</a></li>
+        </ul>
+      </li>
+      <li>
+        <form class="nav navbar-nav navbar-form" role="search">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
             </div>
-          </li>
-          <!-- REGISTER BUTTON -->
-          <li><a href="{% url 'registration_register' %}">Register</a></li>
-        {% endif %}
-      </ul>
-    </div><!--/.nav-collapse -->
+        </form>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      {% if request.user.is_authenticated %}
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          {{ request.user }}
+          <span class="badge">{{request.user.standarduser.authority}}</span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Contributions</a></li>
+          <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+        </ul>
+      </li>
+      {% elif not "/accounts/login" in request.get_full_path %}
+      <li class="dropdown">
+        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login<strong class="caret"></strong></a>
+        <div class="dropdown-menu" style="padding-right:15px;">
+          <form class='navbar-form navbar-right' method='POST' action='{% url "auth_login" %}'>{% csrf_token%}
+            <input style="margin-bottom:10px" type='text' class='form-control' name='username' placeholder='Username' />
+            <input style="margin-bottom:10px" type='password' class='form-control' name='password' placeholder='Password' />
+            <button style="width: 100%" type='submit' class='btn btn-primary'>Login</button>
+          </form>
+        </div>
+      </li>
+      <li><a href="{% url 'registration_register' %}">Register</a></li>
+      {% endif %}
+    </ul>
   </div>
 </nav>
 

@@ -10,31 +10,14 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Claims</h3>
-				</div>
-				<div class="panel-body">
-					{% for claim in object_list %}
-					<div class="row">
-						<div class="col-md-12">
-							<div class="media">
-								<div class="media-left">
-									<span class="media-object fa fa-plus fa-2x" data-id="{{ claim.id }}" id="affirm_button"></span>
-									<h4 class="media-heading text-center">{{ affirmations }}</h4>
-								</div>
-								<div class="media-body">
-									<div class="content">
-										<h4 class="media-heading"><a href="{% url 'viewClaim' claim.id %}">{{ claim.id }}: {{ claim.name }}</a></h4>
-										<p>{{ claim.content }}</p>
-										<small>Contributed by: {{ creator_user_name }}</small>
-									</div>
-								</div>
-							</div>
-						</div>
+			<div class="panel-body">
+				{% for claim in object_list %}
+				<div class="row">
+					<div class="col-md-12">
+						{% include "claims/snippet_claim_well.html" %}
 					</div>
-					{% endfor %}
 				</div>
+				{% endfor %}
 			</div>
 		</div>
 	</div>
