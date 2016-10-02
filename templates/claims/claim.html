@@ -1,0 +1,51 @@
+<div class="well well-lg" id="claim-box">
+    <div class="media-left">
+        <span
+            id = "claim-affirmation"
+            data-affirmation-id="{{ affirmation.id }}"
+            data-claim-id="{{ claim.id }}"
+            class="media-object fa
+                {% if affirmation %}
+                    fa-check
+                {% else %}
+                    fa-plus
+                {% endif %}
+                fa-2x"
+            id="affirm_button">
+        </span>
+        <h4
+            id = "num-affirmations"
+            class="media-heading text-center">
+            {{ num_affirmations }}
+        </h4>
+    </div>
+    <div class="media-body">
+        <div class="content">
+
+            {% if user.is_authenticated %}
+            <div class='btn-toolbar pull-right'>
+                <button type='button' id="edit-claim" class='btn btn-primary'>Edit</button>
+            </div>
+            {% endif %}
+
+            <h4 class="media-heading">
+                <a id="claim-name"
+                    data-claim-id="{{ claim.id }}"
+                    contenteditable="false"
+                    href="{% url 'viewClaim' claim.id %}">
+                    {{ claim.name }}
+                </a>
+            </h4>
+
+            <p id="claim-content"
+                data-claim-id="{{ claim.id }}"
+                contenteditable="false">
+                {{ claim.content }}
+            </p>
+
+            <small>Contributed by: {{ creator_user_name }}</small>
+        </div>
+    </div>
+</div>
+
+{# <a href="{% url 'viewClaim' claim.id %}">{{ claim.name }}</a> #}

@@ -10,72 +10,15 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			{# <div class="panel panel-primary"> #}
-				{# <div class="panel-heading"> #}
-					{# <h3 class="panel-title">Claims</h3> #}
-				{# </div> #}
-				{# <div class="panel-body"> #}
-					<div class="row">
-						<div class="col-md-8">
-							{% include "claims/snippet_claim_well.html" %}
-						</div>
-						<div class="col-md-4">
-							<div class="well well-lg">
-								<div class="media-body">
-									<h4 class="media-heading">This Term</h4>
-									<p>This term appears in the claim at left but appears elsewhere with a (hopefully slightly) different meaning. This is where the precise definition used here appears.
-									</p>
-									<small>Contributed by: {{ creator_user_name }}</small>
-								</div>
-							</div>
-							<div class="well well-lg">
-								<div class="media-body">
-									<h4 class="media-heading">This Other Term</h4>
-									<p>This other term appers in the claim at left and requires a little bit more detail.
-									</p>
-									<small>Contributed by: {{ creator_user_name }}</small>
-								</div>
-							</div>
-						</div>
-					</div>
-				{# </div> #}
-			{# </div> #}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-8">
-			{# <div class="panel panel-default"> #}
-				{# <div class="panel-heading"> #}
-		    		<h3 class="panel-title">Arguments in Favor</h3>
-				{# </div> #}
-				{# <div class="panel-body"> #}
-					<article class="media">
-						<div class="media-left">
-							<span class="media-object fa fa-plus fa-2x" id="affirm_button"></span>
-							<h4 class="media-heading text-center">{{ affirmations }}</h4>
-						</div>
-						<div class="media-body">
-							<div class="content">
-								<h4 class="media-heading"><a href="{% url 'viewClaim' claim.id %}">{{ claim.name }}</a></h4>
-								<p>{{ claim.content }}</p>
-								<small>Contributed by: {{ creator_user_name }}</small>
-							</div>
-						</div>
-					</article>
-				{# </div> #}
-			{# </div> #}
-		</div>
-		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-		    		<h3 class="panel-title">Ethoi</h3>
+			<div class="row">
+				<div class="col-md-12">
+					{% include "claims/claim.html" %}
 				</div>
-				<div class="panel-body">
-				<p>?!?! These are TBD</p>
 			</div>
 		</div>
 	</div>
 </div>
+
 
  {% endblock %}
 

@@ -32,17 +32,23 @@ def addClaim(request):
     if request.method == 'POST' and form.is_valid():
         # save to pg database
         new_claim = form.save(commit=False)
-        new_claim.user = request.user
+        new_claim.creator_user = request.user
         new_claim.save()
 
         # increment authority
+        this_users_affirmations = []
+        for e in Affirmation.objects.filter(user_id=request.user.id).order_by('claim_id'):
+            this_users_affirmations.append(e.claim_id)
+        print this_users_affirmations
+
+        # get list of affirmations to pass to template renderer
         user = User.objects.get(pk=request.user.id).standarduser
         user.authority += 1
         user.save()
 
         # create affirmation
-        new_affirmation = Affirmation(claim=new_claim, user=new_claim.user)
-        new_affirmation.save()
+        # new_affirmation = Affirmation(claim=new_claim, user=new_claim.creator_user)
+        # new_affirmation.save()
 
         # connect to graph, start and commit new transaction
         authenticate("localhost:7474", "neo4j", "cbristol")
@@ -68,14 +74,25 @@ def addClaim(request):
 
 
 def viewClaim(request, claim):
+    context = {}
+
     try:
-        c = Claim.objects.get(pk=claim)
-        affirmations = Affirmation.objects.filter(claim_id=claim).count()
-        creator_user_name = User.objects.get(id=c.creator_user.id).username
+        this_claim = Claim.objects.get(pk=claim)
     except Claim.DoesNotExist:
         raise Http404("Claim does not exist")
 
-    return render(request, "claims/viewClaim.html", {'claim': c, 'affirmations': affirmations, 'creator_user_name': creator_user_name})
+    try:
+        context["affirmation"] = Affirmation.objects.get(claim_id=claim,user_id=request.user)
+    except Affirmation.DoesNotExist:
+        context["affirmation"] = None
+
+    context["claim"] = this_claim
+    context["num_affirmations"] = Affirmation.objects.filter(claim_id=claim).count()
+    context["creator_user_name"] = User.objects.get(id=this_claim.creator_user.id).username
+
+    print context
+
+    return render(request, "claims/viewClaim.html", context)
 
 
 class ClaimListView(ListView):

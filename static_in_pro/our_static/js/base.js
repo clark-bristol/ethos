@@ -25,8 +25,9 @@ function csrfSafeMethod(method) {
 }
 
 
-// behavior for claim plus: switch to check and create affirmation
+// when document is ready...
 $(document).ready(function(){
+    // security
     var csrftoken = getCookie('csrftoken');
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
@@ -35,27 +36,88 @@ $(document).ready(function(){
             }
         }
     });
-	$('.fa-plus').click(function(){
-        console.log("About to toggle!");
-        $(this).toggleClass('fa-plus fa-check');
-        console.log("Toggled!");
-        // $.post('/affirmations/' + $(this).data().id + '/', {});
-        var data = JSON.stringify({ "claim" : 128, "user" : 4, "csrf_token" : csrftoken });
-        console.log(data);
-        console.log("About to post!");
+
+    // define variables to be used
+    // ...
+
+    // affirm claim by clicking on the plus button
+    // BUG: doesn't work if you click multiple times
+    $('#claim-affirmation').click(function(){
+        var affirmation_id = $(this).attr('data-affirmation-id');
+        if (affirmation_id === "") {
+            $(this).toggleClass('fa-plus fa-check');
+            $('#num-affirmations').text($('#num-affirmations').text()*1+1);
+            var claim_id = $(this).attr("data-claim-id");
+            var data = JSON.stringify({ "claim" : claim_id, "user" : user_id, "csrf_token" : csrftoken });
+            $.ajax({
+                "type": "POST",
+                "dataType": "json",
+                "url": "http://localhost:8000/api/affirmations/",
+                "data": data,
+                "contentType": "application/json",
+                "success": function(result) {
+                   console.log("Posted!");
+                },
+            });
+        } else if (affirmation_id !== "") {
+            $(this).toggleClass('fa-plus fa-check');
+            $('#num-affirmations').text($('#num-affirmations').text()*1-1);
+            var url = "http://localhost:8000/api/affirmations/".concat(affirmation_id.toString()).concat("/");
+            $.ajax( {
+                "type": "DELETE",
+                "url": url,
+                "success": function(result) {
+                   console.log("Deleted!");
+                },
+            });
+        } else {
+            console.log("ERROR!");
+        }
+    });
+
+    // Edit the content of a claim
+    $('#edit-claim').click(function(){
+        var curr_text = $(this).text();
+        if (curr_text === "Edit") {
+            $('#claim-name, #claim-content').attr("contenteditable", "true");
+            $(this).text("Cancel");
+            $(this).after('<button type="button" id="save-claim" class="btn btn-primary">Save</button>');
+        } else if (curr_text === "Cancel") {
+            location.reload();
+        }
+    });
+    // Save the content of a claim
+    $('#claim-box').on("click", '#save-claim', function(){
+        $('#claim-name, #claim-content').attr("contenteditable", "false");
+        $('#edit-claim').text("Edit");
+        var claim_id = $('#claim-content').attr("data-claim-id");
+        var claim_name = $('#claim-name').text();
+        var claim_content = $('#claim-content').text();
+        var data = '{ "id" : "'.concat(claim_id).concat('", "name" : "').concat(claim_name.replace(/\s+/g, " ")).concat('", "content" : "').concat(claim_content.replace(/\s+/g, " ")).concat('",  "csrf_token" : "').concat(csrftoken).concat('"}');
         $.ajax({
-            "type": "POST",
+            "type": "PUT",
             "dataType": "json",
-            "url": "http://localhost:8000/api/affirmations/",
+            "url": "http://localhost:8000/api/claims/".concat(claim_id.toString()).concat("/"),
             "data": data,
             "contentType": "application/json",
             "success": function(result) {
-                console.log("YASS!");
+               console.log("Posted!");
             },
         });
-        console.log("Posted!");
-		// $(this).toggleClass('fa-plus fa-check');
-	});
+        $(this).remove();
+    });
+
+
+    // Save the content of a claim
+    // $('#save-claim').click(function(){
+    //     $('#claim-name, #claim-content').attr("contenteditable", function(index, attr) {
+    //         return attr == 'false' ? 'true' : 'false';
+    //     });
+    //     $(this).text(function(index, text) {
+    //         return text == 'Edit' ? 'Done' : 'Edit';
+    //     });
+    // });
+
 });
 
 
