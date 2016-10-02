@@ -23,24 +23,11 @@ function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
-function ajaxAffirmClaim(){
-    var claim_box = $(this).closest("[id^='claim_box']");
-    var user_id = claim_box.attr("data-user-id");
-    var claim_id = claim_box.attr("data-claim-id");
-    var data = JSON.stringify({ "claim" : claim_id, "user" : user_id, "csrf_token" : csrftoken });
-    $.ajax({
-        "type": "POST",
-        "dataType": "json",
-        "url": "http://localhost:8000/api/affirmations/",
-        "data": data,
-        "contentType": "application/json",
-        // "success": function(result) {
-        //    console.log("YASS!");
-        // },
-    });
-}
 
+
+// when document is ready...
 $(document).ready(function(){
+    // security
     var csrftoken = getCookie('csrftoken');
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
@@ -50,47 +37,87 @@ $(document).ready(function(){
         }
     });
 
-// Edit Claims  contenteditable="true"
-    $('#edit-claim').click(function(){
-        var claim_name_elem = $(this).closest("[id^='claim-name']");
-        claim_name_elem.attr("contenteditable", "true");
-        var claim_content_elem = $(this).closest("[id^='claim-content']");
-        claim_content_elem.attr("contenteditable", "true");
-        $(this).text('Done');
+    // define variables to be used
+    // ...
+
+    // affirm claim by clicking on the plus button
+    // BUG: doesn't work if you click multiple times
+    $('#claim-affirmation').click(function(){
+        var affirmation_id = $(this).attr('data-affirmation-id');
+        if (affirmation_id === "") {
+            $(this).toggleClass('fa-plus fa-check');
+            $('#num-affirmations').text($('#num-affirmations').text()*1+1);
+            var claim_id = $(this).attr("data-claim-id");
+            var data = JSON.stringify({ "claim" : claim_id, "user" : user_id, "csrf_token" : csrftoken });
+            $.ajax({
+                "type": "POST",
+                "dataType": "json",
+                "url": "http://localhost:8000/api/affirmations/",
+                "data": data,
+                "contentType": "application/json",
+                "success": function(result) {
+                   console.log("Posted!");
+                },
+            });
+        } else if (affirmation_id !== "") {
+            $(this).toggleClass('fa-plus fa-check');
+            $('#num-affirmations').text($('#num-affirmations').text()*1-1);
+            var url = "http://localhost:8000/api/affirmations/".concat(affirmation_id.toString()).concat("/");
+            $.ajax( {
+                "type": "DELETE",
+                "url": url,
+                "success": function(result) {
+                   console.log("Deleted!");
+                },
+            });
+        } else {
+            console.log("ERROR!");
+        }
     });
 
-// behavior for claim plus: switch to check and create affirmation
-// THESE NEED TO BE DRY-ED UP! ONLY DIFFERENCE IS POST VS DELETE
-    $('.fa-plus').click(function(){
-        var claim_box = $(this).closest("[id^='claim-box']");
-        var user_id = claim_box.attr("data-user-id");
-        var claim_id = claim_box.attr("data-claim-id");
-        var data = JSON.stringify({ "claim" : claim_id, "user" : user_id, "csrf_token" : csrftoken });
+    // Edit the content of a claim
+    $('#edit-claim').click(function(){
+        var curr_text = $(this).text();
+        if (curr_text === "Edit") {
+            $('#claim-name, #claim-content').attr("contenteditable", "true");
+            $(this).text("Cancel");
+            $(this).after('<button type="button" id="save-claim" class="btn btn-primary">Save</button>');
+        } else if (curr_text === "Cancel") {
+            location.reload();
+        }
+    });
+    // Save the content of a claim
+    $('#claim-box').on("click", '#save-claim', function(){
+        $('#claim-name, #claim-content').attr("contenteditable", "false");
+        $('#edit-claim').text("Edit");
+        var claim_id = $('#claim-content').attr("data-claim-id");
+        var claim_name = $('#claim-name').text();
+        var claim_content = $('#claim-content').text();
+        var data = '{ "id" : "'.concat(claim_id).concat('", "name" : "').concat(claim_name.replace(/\s+/g, " ")).concat('", "content" : "').concat(claim_content.replace(/\s+/g, " ")).concat('",  "csrf_token" : "').concat(csrftoken).concat('"}');
         $.ajax({
-            "type": "POST",
+            "type": "PUT",
             "dataType": "json",
-            "url": "http://localhost:8000/api/affirmations/",
+            "url": "http://localhost:8000/api/claims/".concat(claim_id.toString()).concat("/"),
             "data": data,
             "contentType": "application/json",
             "success": function(result) {
                console.log("Posted!");
             },
         });
-        $(this).toggleClass('fa-plus fa-check');
+        $(this).remove();
     });
-    $('.fa-check').click(function(){
-        var claim_box = $(this).closest("[id^='claim-box']");
-        var affirmation_id = claim_box.attr("data-affirmation-id");
-        var url = "http://localhost:8000/api/affirmations/".concat(affirmation_id.toString()).concat("/");
-        $.ajax( {
-            "type": "DELETE",
-            "url": url,
-            "success": function(result) {
-               console.log("Deleted!");
-            },
-        });
-        $(this).toggleClass('fa-plus fa-check');
-    });
+
+
+    // Save the content of a claim
+    // $('#save-claim').click(function(){
+    //     $('#claim-name, #claim-content').attr("contenteditable", function(index, attr) {
+    //         return attr == 'false' ? 'true' : 'false';
+    //     });
+    //     $(this).text(function(index, text) {
+    //         return text == 'Edit' ? 'Done' : 'Edit';
+    //     });
+    // });
+
 });
 
 
