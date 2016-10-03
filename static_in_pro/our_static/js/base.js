@@ -40,8 +40,10 @@ $(document).ready(function(){
     // define variables to be used
     // ...
 
-    // affirm claim by clicking on the plus button
-    // BUG: doesn't work if you click multiple times
+    // The Affirmation of The Claim by The User
+    // - Create a new affirmation when the user clicks on the plus icon (when present)
+    // - Delete the existing affirmation when the user clicks on the check icon (when present)
+    // BUG: DOESN'T WORK WHEN THE USER CLICKS MULTIPLE TIMES BECAUSE DON'T KNOW THE NEW AFFIRMATION ID
     $('#claim-affirmation').click(function(){
         var affirmation_id = $(this).attr('data-affirmation-id');
         if (affirmation_id === "") {
@@ -75,6 +77,8 @@ $(document).ready(function(){
         }
     });
 
+
+    // The Claim
     // Edit the content of a claim
     $('#edit-claim').click(function(){
         var curr_text = $(this).text();
@@ -86,7 +90,8 @@ $(document).ready(function(){
             location.reload();
         }
     });
-    // Save the content of a claim
+
+    // Save the content of the claim
     $('#claim-box').on("click", '#save-claim', function(){
         $('#claim-name, #claim-content').attr("contenteditable", "false");
         $('#edit-claim').text("Edit");
@@ -106,18 +111,6 @@ $(document).ready(function(){
         });
         $(this).remove();
     });
-
-
-    // Save the content of a claim
-    // $('#save-claim').click(function(){
-    //     $('#claim-name, #claim-content').attr("contenteditable", function(index, attr) {
-    //         return attr == 'false' ? 'true' : 'false';
-    //     });
-    //     $(this).text(function(index, text) {
-    //         return text == 'Edit' ? 'Done' : 'Edit';
-    //     });
-    // });
-
 });
 
 
