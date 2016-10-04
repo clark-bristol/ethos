@@ -85,7 +85,7 @@ $(document).ready(function(){
         if (curr_text === "Edit") {
             $('#claim-name, #claim-content').attr("contenteditable", "true");
             $(this).text("Cancel");
-            $(this).after('<button type="button" id="save-claim" class="btn btn-primary">Save</button>');
+            $(this).after('<button type="button" id="save-claim" class="btn btn-danger btn-sm">Save</button>');
         } else if (curr_text === "Cancel") {
             location.reload();
         }

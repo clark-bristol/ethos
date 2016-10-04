@@ -1,3 +1,5 @@
+# Concerned that deleting a claim will not be prevented if it's in an argument.
+# probably need to create an explicit through table for this
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
@@ -7,22 +9,30 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Claim(models.Model):
-    name = models.CharField(max_length=120, blank=False, null=True)
-    content = models.CharField(max_length=1000, blank=False, null=True)
-    creator_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # source = models.CharField(max_length=120, blank=False, null=True)
-    created = models.DateTimeField(auto_now_add=True, auto_now=False)
-    updated = models.DateTimeField(auto_now_add=False, auto_now=True)
-    # user = models.CharField(max_length=120, blank=False, null=True)
-    # num_affirmations = models.IntegerField(blank=False, default=0)
+    name = models.CharField(max_length=255)
+    content = models.CharField(max_length=10000)
+    created = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     # tags = TaggableManager()  # http://django-taggit.readthedocs.org/en/latest/getting_started.html
+
+    class Meta:
+        unique_together = ('name', 'content')
 
 
 # Create your models here.
 class Affirmation(models.Model):
-    claim = models.ForeignKey(Claim)
-    user = models.ForeignKey(User)
+    claim = models.ForeignKey(Claim, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
 
     class Meta:
         unique_together = ('claim', 'user')
+
+
+# Create your models here.
+class Argument(models.Model):
+    name = models.CharField(max_length=255)
+    premise_claims = models.ManyToManyField(Claim, related_name='dependent_arguments')
+    supported_claim = models.ForeignKey(Claim, on_delete=models.PROTECT, related_name='supporting_arguments')
+    created = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated = models.DateTimeField(auto_now_add=False, auto_now=True)

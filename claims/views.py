@@ -32,7 +32,6 @@ def addClaim(request):
     if request.method == 'POST' and form.is_valid():
         # save to pg database
         new_claim = form.save(commit=False)
-        new_claim.creator_user = request.user
         new_claim.save()
 
         # increment authority
@@ -88,7 +87,6 @@ def viewClaim(request, claim):
 
     context["claim"] = this_claim
     context["num_affirmations"] = Affirmation.objects.filter(claim_id=claim).count()
-    context["creator_user_name"] = User.objects.get(id=this_claim.creator_user.id).username
 
     print context
 
