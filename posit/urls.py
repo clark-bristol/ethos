@@ -36,6 +36,10 @@ urlpatterns = [
     url(r'^claims/contribute/$', claims_views.addClaim, kwargs=None, name='contributeClaim'),
     url(r'^claims/$', claims_views.ClaimListView.as_view(), kwargs=None, name='browseClaims'),
     url(r'^claims/(?P<claim>[0-9]{1,10})/', claims_views.viewClaim, kwargs=None, name='viewClaim'),
+    # arguments
+    url(r'^arguments/contribute/$', claims_views.addArgument, kwargs=None, name='contributeArgument'),
+    url(r'^arguments/$', claims_views.ArgumentListView.as_view(), kwargs=None, name='browseArguments'),
+    url(r'^arguments/(?P<argument>[0-9]{1,10})/', claims_views.viewArgument, kwargs=None, name='viewArgument'),
     # urls for the REST API
     url(r'^api/', include('claims.urls')),
     # Admin-related URLs (including Grappelli)

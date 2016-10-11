@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from .forms import ClaimForm
+from .forms import ClaimForm, ArgumentForm
 from django.contrib.auth.models import User
 from django.http import Http404
-from claims.models import Claim
+from claims.models import Claim, Argument, ArgumentPremise
 # Neo4J
 from py2neo import authenticate, Graph, Node, Relationship
 # List view
@@ -24,6 +24,8 @@ from rest_framework.reverse import reverse
 ############################  Webpage Views #################################
 #############################################################################
 
+
+############################  Claim Form #################################
 # @login_required
 # @csrf_exempt
 @require_http_methods(["GET", "POST"])
@@ -72,6 +74,32 @@ def addClaim(request):
     return render(request, "forms.html", context)
 
 
+############################  Argument Form #################################
+# @login_required
+# @csrf_exempt
+@require_http_methods(["GET", "POST"])
+def addArgument(request):
+    form = ArgumentForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        # save to pg database
+        new_argument = form.save(commit=False)
+        new_argument.save()
+
+        for claim_id in request.POST.getlist('premise_claims'):
+            argumentpremise = ArgumentPremise.objects.create(claim_id=int(claim_id), argument = new_argument)
+
+        return redirect("http://localhost:8000/arguments/")
+
+    title = "Make an Argument!"
+    context = {
+        "form": form,
+        "title": title,
+    }
+
+    return render(request, "forms.html", context)
+
+
+############################  View Claim #################################
 def viewClaim(request, claim):
     context = {}
 
@@ -93,8 +121,30 @@ def viewClaim(request, claim):
     return render(request, "claims/viewClaim.html", context)
 
 
+############################  View Argument #################################
+def viewArgument(request, argument):
+    context = {}
+
+    try:
+        this_argument = Argument.objects.get(pk=argument)
+    except Argument.DoesNotExist:
+        raise Http404("Argument does not exist")
+
+    context["argument"] = this_argument
+
+    print context
+
+    return render(request, "claims/viewArgument.html", context)
+
+
+############################  List all Claims #################################
 class ClaimListView(ListView):
     model = Claim
+
+
+############################  List all Arguments #################################
+class ArgumentListView(ListView):
+    model = Argument
 
 
 #############################################################################

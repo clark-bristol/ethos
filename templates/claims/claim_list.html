@@ -12,11 +12,13 @@
 		<div class="col-md-12">
 			<div class="panel-body">
 				{% for claim in object_list %}
-				<div class="row">
-					<div class="col-md-12">
-						{% include "claims/claim.html" %}
+					<div class="row">
+						<div class="col-md-12">
+							<div class="well well-lg" id="claim-box">
+							{% include "claims/claim.html" %}
+							</div>
+						</div>
 					</div>
-				</div>
 				{% endfor %}
 			</div>
 		</div>

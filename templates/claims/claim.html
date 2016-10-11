@@ -1,6 +1,7 @@
 {# The Claim Box #}
 
-<div class="well well-lg" id="claim-box">
+
+<div class="media">
     <div class="media-left">
         <span
             id = "claim-affirmation"
@@ -22,27 +23,23 @@
         </h4>
     </div>
     <div class="media-body">
-        <div class="content">
-
-            {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
             <div class='btn-toolbar pull-right'>
                 <button type='button' id="edit-claim" class='btn btn-primary btn-sm'>Edit</button>
             </div>
-            {% endif %}
-
-            <h4 class="media-heading">
-                <a id="claim-name"
-                    data-claim-id="{{ claim.id }}"
-                    contenteditable="false"
-                    href="{% url 'viewClaim' claim.id %}">
-                    {{ claim.name }}
-                </a>
-            </h4>
-            <p id="claim-content"
+        {% endif %}
+        <h4 class="media-heading">
+            <a id="claim-name"
                 data-claim-id="{{ claim.id }}"
-                contenteditable="false">
-                {{ claim.content }}
-            </p>
-        </div>
+                contenteditable="false"
+                href="{% url 'viewClaim' claim.id %}">
+                {{ claim.name }}
+            </a>
+        </h4>
+        <p id="claim-content"
+            data-claim-id="{{ claim.id }}"
+            contenteditable="false">
+            {{ claim.content }}
+        </p>
     </div>
 </div>

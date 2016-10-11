@@ -1,0 +1,27 @@
+{# The Argument Box #}
+
+
+<div class="well well-lg" id="argument-box">
+    <div class="media">
+        <div class="media-body">
+            <h3 class="media-heading">Argument:
+                <a id="argument-name"
+                    data-argument-id="{{ argument.id }}"
+                    contenteditable="false"
+                    href="{% url 'viewArgument' argument.id %}">
+                    {{ argument.name }}
+                </a>
+            </h3>
+    <div class="media">
+    {% include "claims/claim.html" with claim=argument.supported_claim %}
+    <div class="media-left">
+        <div style="width:20px; border-left: thick solid #ff0000">
+        </div>
+    </div>
+    <div class="media-body">
+    {% for claim in argument.premise_claims.all %}
+        {% include "claims/claim.html" %}
+    {% endfor %}
+    </div>
+    </div>
+</div>
