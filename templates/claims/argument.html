@@ -12,16 +12,20 @@
                     {{ argument.name }}
                 </a>
             </h3>
-    <div class="media">
-    {% include "claims/claim.html" with claim=argument.supported_claim %}
-    <div class="media-left">
-        <div style="width:20px; border-left: thick solid #ff0000">
+            <div class="media">
+                <h3 class="media-heading">In Support of:</h3>
+                {% include "claims/claim.html" with claim=argument.supported_claim %}
+                <h3 class="media-heading">Based on:</h3>
+                <div class="media-left">
+                    <div style="width:20px; border-left: thick solid #ff0000">
+                    </div>
+                </div>
+                <div class="media-body">
+                    {% for claim in argument.premise_claims.all %}
+                        {% include "claims/claim.html" %}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="media-body">
-    {% for claim in argument.premise_claims.all %}
-        {% include "claims/claim.html" %}
-    {% endfor %}
-    </div>
     </div>
 </div>
