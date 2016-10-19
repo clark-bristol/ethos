@@ -21,6 +21,8 @@ from rest_framework.reverse import reverse
 from rest_framework.renderers import JSONRenderer
 from django.utils.six import BytesIO
 from rest_framework.parsers import JSONParser
+# functions!
+from functions import addClaimAndUserToGraph, addArgumentToGraph, addAffirmationToGraph
 
 #############################################################################
 ############################  Webpage Views #################################
@@ -49,19 +51,7 @@ def addClaim(request):
         user.authority += 1
         user.save()
 
-        # create affirmation
-        # new_affirmation = Affirmation(claim=new_claim, user=new_claim.creator_user)
-        # new_affirmation.save()
-
-        # connect to graph, start and commit new transaction
-        authenticate("localhost:7474", "neo4j", "cbristol")
-        claim = Node("Claim", claim_id=new_claim.id, name=new_claim.name, content=new_claim.content)
-        user = Node("User", user_id=request.user.id, name=request.user.username)
-        subgraph = claim | user
-        graph = Graph()
-        tx = graph.begin()
-        tx.merge(subgraph, primary_label='name')
-        tx.commit()
+        addClaimAndUserToGraph(new_claim, request.user)
 
         return redirect("http://localhost:8000/claims/" + str(new_claim.pk))
 
@@ -88,43 +78,7 @@ def addArgument(request):
         for claim_id in request.POST.getlist('premise_claims'):
             ArgumentPremise.objects.create(claim_id=int(claim_id), argument = new_argument)
 
-        # Neo4J Stuff
-        authenticate("localhost:7474", "neo4j", "cbristol")
-        argument_graph = Node("Argument", argument_id=new_argument.id, name=new_argument.name)
-        subgraph = argument_graph
-
-        for argumentPremise in ArgumentPremise.objects.filter(argument_id=new_argument.id):
-            premiseClaim = argumentPremise.claim
-            premiseClaim_graph = Node("Claim", claim_id=premiseClaim.id, name=premiseClaim.name, content=premiseClaim.content)
-            premise_of_graph = Relationship(premiseClaim_graph, "Premise_Of", argument_graph)
-            subgraph = subgraph | premiseClaim_graph | premise_of_graph
-            # ArgumentPremise.objects.create(claim_id=int(claim_id), argument = new_argument)
-
-        supportedClaim = new_argument.supported_claim
-        print supportedClaim
-        supportedClaim_graph = Node("Claim", claim_id=supportedClaim.id, name=supportedClaim.name, content=supportedClaim.content)
-        supports_graph = Relationship(argument_graph, "Supports", supportedClaim_graph)
-        subgraph = subgraph | supportedClaim_graph | supports_graph
-
-        graph = Graph()
-        tx = graph.begin()
-        tx.merge(subgraph, primary_label='name')
-        tx.commit()
-
-        # for premise_claim in new_argument.premise_claims
-            # premise = Relationship(argumentPremise, "Premise", argument)
-
-        # # connect to graph, start and commit new transaction
-        # authenticate("localhost:7474", "neo4j", "cbristol")
-        # claim = Node("Claim", claim_id=new_claim.id, name=new_claim.name, content=new_claim.content)
-        # user = Node("User", user_id=request.user.id)
-        # affirms = Relationship(user, "Affirms", claim)
-        # subgraph = claim | user | affirms
-        # graph = Graph()
-        # tx = graph.begin()
-        # tx.merge(subgraph, primary_label='name')
-        # # tx.merge(subgraph3, primary_label='user_id')
-        # tx.commit()
+        addArgumentToGraph(new_argument, request.user)
 
         return redirect("http://localhost:8000/arguments/")
 
@@ -153,6 +107,8 @@ def viewClaim(request, claim):
 
     context["claim"] = this_claim
     context["num_affirmations"] = Affirmation.objects.filter(claim_id=claim).count()
+    context["supporting_arguments"] = Argument.objects.filter(supported_claim_id=claim)
+    # context["suggested_claims"] =
 
     # print context
 
@@ -315,16 +271,7 @@ def affirmation_list(request):
             affirmed_claim = serializer.validated_data["claim"]
             affirming_user = serializer.validated_data["user"]
 
-            authenticate("localhost:7474", "neo4j", "cbristol")
-            affirmed_claim_graph = Node("Claim", claim_id=affirmed_claim.id, name=affirmed_claim.name, content=affirmed_claim.content)
-            affirming_user_graph = Node("User", user_id=affirming_user.id, name=affirming_user.username)
-            affirms = Relationship(affirming_user_graph, "Affirms", affirmed_claim_graph)
-            subgraph = affirmed_claim_graph | affirming_user_graph | affirms
-            graph = Graph()
-            tx = graph.begin()
-            tx.merge(subgraph, primary_label='name')
-            # tx.merge(subgraph3, primary_label='user_id')
-            tx.commit()
+            addAffirmationToGraph(affirmed_claim, affirming_user)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 

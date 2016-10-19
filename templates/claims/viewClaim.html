@@ -10,13 +10,36 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<div class="row">
-				<div class="col-md-12">
-                    <div class="well well-lg" id="claim-box">
-                       {% include "claims/claim.html" %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-primary" id="claim-box">
+                        <div class="panel-heading">Claim</div>
+                        <div class="panel-body">
+                            {% include "claims/claim.html" %}
+                        </div>
                     </div>
-				</div>
-			</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-info" id="xxx">
+                        <div class="panel-heading">Related Claims</div>
+                        <div class="panel-body">
+                            {% include "claims/claim.html" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {% for argument in supporting_arguments %}
+                    <div class="panel panel-warning" id="argument-box">
+                        <div class="panel-heading">Argument</div>
+                        <div class="panel-body">
+                            {% include "claims/argument.html" %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
 		</div>
 	</div>
 </div>
