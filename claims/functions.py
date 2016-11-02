@@ -13,7 +13,7 @@ from py2neo import authenticate, Graph, Node, Relationship
 ############################  Add Claim to Graph ###############################
 def addClaimAndUserToGraph(claim, user):
 
-    authenticate("localhost:7474", settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)
+    authenticate(settings.SECRET_NEO4J_DB_HOSTPORT, settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)
     claimNode = Node("Claim", claim_id=claim.id, name=claim.name, content=claim.content)
     userNode = Node("User", user_id=user.id, name=user.username)
     subgraph = claimNode | userNode
@@ -26,7 +26,7 @@ def addClaimAndUserToGraph(claim, user):
 ############################  Add Argument to Graph ############################
 def addArgumentToGraph(argument, user):
 
-    authenticate("localhost:7474", settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)
+    authenticate(settings.SECRET_NEO4J_DB_HOSTPORT, settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)
     argumentNode = Node("Argument", argument_id=argument.id, name=argument.name)
     subgraph = argumentNode
 
@@ -50,7 +50,7 @@ def addArgumentToGraph(argument, user):
 #########################  Add Affirmation to Graph ############################
 def addAffirmationToGraph(claim, user):
 
-    authenticate("localhost:7474", settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)
+    authenticate(settings.SECRET_NEO4J_DB_HOSTPORT, settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)
     claimNode = Node("Claim", claim_id=claim.id, name=claim.name, content=claim.content)
     userNode = Node("User", user_id=user.id, name=user.username)
     affirmsRelationship = Relationship(userNode, "Affirms", claimNode)

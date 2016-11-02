@@ -97,12 +97,12 @@ DATABASES = {
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # },
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ethosdb',
+        'ENGINE': secret_postgres_db_engine,
+        'NAME': secret_postgres_db_name,
         'USER': secret_postgres_db_user,
         'PASSWORD': secret_postgres_db_password,
-        'HOST': '',
-        'PORT': '',
+        'HOST': secret_postgres_db_host,
+        'PORT': secret_postgres_db_port,
     }
 }
 
