@@ -1,16 +1,15 @@
-from django.contrib.auth.models import User
 from django.conf import settings
-from claims.models import Claim, Argument, ArgumentPremise
+from claims.models import ArgumentPremise
 # Neo4J
 from py2neo import authenticate, Graph, Node, Relationship
 # List view
 
-#############################################################################
-############################  Webpage Views #################################
-#############################################################################
+#
+# Webpage Views
+#
 
 
-############################  Add Claim to Graph ###############################
+# Add Claim to Graph
 def addClaimAndUserToGraph(claim, user):
 
     authenticate(settings.SECRET_NEO4J_DB_HOSTPORT, settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)
@@ -23,7 +22,7 @@ def addClaimAndUserToGraph(claim, user):
     tx.commit()
 
 
-############################  Add Argument to Graph ############################
+# Add Argument to Graph
 def addArgumentToGraph(argument, user):
 
     authenticate(settings.SECRET_NEO4J_DB_HOSTPORT, settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)
@@ -47,7 +46,7 @@ def addArgumentToGraph(argument, user):
     tx.commit()
 
 
-#########################  Add Affirmation to Graph ############################
+# Add Affirmation to Graph
 def addAffirmationToGraph(claim, user):
 
     authenticate(settings.SECRET_NEO4J_DB_HOSTPORT, settings.SECRET_NEO4J_DB_USER, settings.SECRET_NEO4J_DB_PASSWORD)

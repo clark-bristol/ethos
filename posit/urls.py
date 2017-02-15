@@ -18,9 +18,7 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from posit import views as posit_views
-from claims.models import Affirmation
 from claims import views as claims_views
-from rest_framework import routers, serializers, viewsets  # for REST API thing
 # import userProfiles.regbackend
 
 

@@ -8,10 +8,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
 
+
 class ClaimSerializer(serializers.ModelSerializer):
     class Meta:
         model = Claim
         fields = ('id', 'name', 'content')
+
 
 class AffirmationSerializer(serializers.ModelSerializer):
     class Meta:

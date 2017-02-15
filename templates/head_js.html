@@ -4,9 +4,8 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 
-<!-- Bootstrap core JavaScript
-<script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script> -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!-- Bootstrap core JavaScript -->
+<script src="{% static '/bootstrap4/js/bootstrap.js' %}"></script>
 
 <!-- for X-Editable
 <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jqueryui-editable/js/jqueryui-editable.min.js"></script>
@@ -14,11 +13,11 @@
 
 <!-- javascript containing Django template tags -->
 <script type="text/javascript">
-    var user_id = {{ user.id }};
+    var user_id={{ user.id }};
 </script>
 
 <!-- My Javascript File -->
 <script src="{% static 'js/base.js' %}"></script>
 
 <!-- For claim.html -->
-<script src="{% static 'js/claim.js' %}"></script>
+{# <script src="{% static 'js/claim.js' %}"></script> #}

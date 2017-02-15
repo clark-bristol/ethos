@@ -24,14 +24,13 @@ from rest_framework.parsers import JSONParser
 # functions!
 from functions import addClaimAndUserToGraph, addArgumentToGraph, addAffirmationToGraph
 
-#############################################################################
-############################  Webpage Views #################################
-#############################################################################
+#
+# Webpage Views #################################
+#
+
+# Claim Form
 
 
-############################  Claim Form #################################
-# @login_required
-# @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def addClaim(request):
     form = ClaimForm(request.POST or None)
@@ -64,7 +63,7 @@ def addClaim(request):
     return render(request, "forms.html", context)
 
 
-############################  Argument Form #################################
+# Argument Form
 # @login_required
 # @csrf_exempt
 @require_http_methods(["GET", "POST"])
@@ -76,7 +75,7 @@ def addArgument(request):
         new_argument.save()
 
         for claim_id in request.POST.getlist('premise_claims'):
-            ArgumentPremise.objects.create(claim_id=int(claim_id), argument = new_argument)
+            ArgumentPremise.objects.create(claim_id=int(claim_id), argument=new_argument)
 
         addArgumentToGraph(new_argument, request.user)
 
@@ -91,7 +90,7 @@ def addArgument(request):
     return render(request, "forms.html", context)
 
 
-############################  View Claim #################################
+# View Claim
 def viewClaim(request, claim):
     context = {}
 
@@ -101,7 +100,8 @@ def viewClaim(request, claim):
         raise Http404("Claim does not exist")
 
     try:
-        context["affirmation"] = Affirmation.objects.get(claim_id=claim,user_id=request.user)
+        print request.user
+        context["affirmation"] = Affirmation.objects.get(claim_id=claim, user_id=request.user)
     except Affirmation.DoesNotExist:
         context["affirmation"] = None
 
@@ -115,7 +115,7 @@ def viewClaim(request, claim):
     return render(request, "claims/viewClaim.html", context)
 
 
-############################  View Argument #################################
+# View Argument
 def viewArgument(request, argument):
     context = {}
 
@@ -131,19 +131,19 @@ def viewArgument(request, argument):
     return render(request, "claims/viewArgument.html", context)
 
 
-############################  List all Claims #################################
+# List all Claims
 class ClaimListView(ListView):
     model = Claim
 
 
-############################  List all Arguments #################################
+# List all Arguments
 class ArgumentListView(ListView):
     model = Argument
 
 
-#############################################################################
-################ API Views: Users, Claims, Affirmations #####################
-#############################################################################
+#
+# API Views: Users, Claims, Affirmations #####################
+#
 
 
 # API Views: Users
@@ -278,8 +278,6 @@ def affirmation_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 @api_view(['GET', 'PUT', 'DELETE'])
 def affirmation_detail(request, pk):
     """
@@ -304,4 +302,3 @@ def affirmation_detail(request, pk):
     elif request.method == 'DELETE':
         affirmation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-

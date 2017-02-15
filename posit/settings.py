@@ -158,8 +158,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static_in_env", "static_root")
+# This is the directory where static files are copied to (when you run collectstatic)
+#   In deployment this will be a separate server
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_in_env", "static_root")
 
+# These are the directories from which static files are copied into static root
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static_in_pro", "our_static"),
     # '/var/www/static/',
@@ -167,7 +170,7 @@ STATICFILES_DIRS = [
 
 # things that are uploaded (e.g. by users)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "static_in_env", "media_root")
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_in_env", "media_root")
 
 
 # SETTINGS FOR INSTALLED APPS ##############################################################################################
@@ -181,7 +184,7 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 
 # cripsy FORMS TAGs SETTINGS
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # REST API framework
 REST_FRAMEWORK = {

@@ -1,6 +1,72 @@
 {% load staticfiles %}
 
+<!-- todo: get the right side of the navbar to align right -->
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  <div class="container">
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% static 'img/logo text.png' %}" style="height:18px"/></a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'home' %}">Home</a>
+            <a class="dropdown-item" href="{% url 'about' %}">About</a>
+            <a class="dropdown-item" href="{% url 'meta' %}">Meta</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Claims</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'browseClaims' %}">Browse</a>
+            <a class="dropdown-item" href="{% url 'contributeClaim' %}">Contribute</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Arguments</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'browseArguments' %}">Browse</a>
+            <a class="dropdown-item" href="{% url 'contributeArgument' %}">Contribute</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <form class="nav navbar-nav navbar-form" role="search">
+              <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search">
+              </div>
+          </form>
+        </li>
+      </ul>
+      <ul class="navbar-nav navbar-right">
+      {% if request.user.is_authenticated %}
+      <li class="nav-item dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          {{ request.user }} (+{{request.user.standarduser.authority}})
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Profile</a>
+          <a class="dropdown-item" href="#">Contributions</a>
+          <a class="dropdown-item" href="{% url 'auth_logout' %}">Logout</a>
+        </div>
+      </li>
+      {% elif not "/accounts/login" in request.get_full_path %}
+      <li class="nav-item dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<strong class="caret"></strong></a>
+        <div class="dropdown-menu" style="padding-right:15px;">
+          <form class='navbar-form navbar-right' method='POST' action='{% url "auth_login" %}'>{% csrf_token%}
+            <input style="margin-bottom:10px" type='text' class='form-control' name='username' placeholder='Username' />
+            <input style="margin-bottom:10px" type='password' class='form-control' name='password' placeholder='Password' />
+            <button style="width: 100%" type='submit' class='btn btn-primary'>Login</button>
+          </form>
+        </div>
+      </li>
+      <li class="nav-item"><a href="{% url 'registration_register' %}">Register</a></li>
+      {% endif %}
+    </ul>
+    </div>
+  </div>
+</nav>
+
 <!-- Static navbar -->
+<!--
 <nav class="navbar navbar-default navbar-static-top" style="background-color:white">
   <div class="container">
     <ul class="nav navbar-nav">
@@ -62,18 +128,4 @@
     </ul>
   </div>
 </nav>
-
-
-<!-- DROPDOWN CODE:
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-  <ul class="dropdown-menu">
-    <li><a href="#">Action</a></li>
-    <li><a href="#">Another action</a></li>
-    <li><a href="#">Something else here</a></li>
-    <li role="separator" class="divider"></li>
-    <li class="dropdown-header">Nav header</li>
-    <li><a href="#">Separated link</a></li>
-    <li><a href="#">One more separated link</a></li>
-  </ul>
-</li> -->
+-->

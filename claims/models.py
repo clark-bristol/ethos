@@ -20,9 +20,9 @@ class Claim(models.Model):
 
     def __str__(self):
         return "(%s) %s" % (self.id, self.name)
+
     def __unicode__(self):
         return "(%s) %s" % (self.id, self.name)
-
 
 
 # Create your models here.
