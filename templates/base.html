@@ -5,15 +5,16 @@
     <!-- The below 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
     <title>{% block head_title %}Ethos{% endblock %}</title>
+
     {% include 'head_css.html' %}
+
   </head>
-  {# <body style="background-color: #4752a5;"> #}
   <body>
     {% include 'navbar.html' %}
 
@@ -23,6 +24,9 @@
       {% endblock %}
 
     </div>
+
+    {% include 'footer.html' %}
+
     {% include 'head_js.html' %}
   </body>
 </html>

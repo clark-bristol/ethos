@@ -1,59 +1,91 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  min-height: 100%;
+  position: relative;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 80px;
+}
+.footer {
+  background-color: #f5f5f5;
+  bottom: 0;
+  height: 80px;
+  position: absolute;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+}
+
+
+.media {
+  border: 1px;
+  border-style: solid;
+  border-color: black;
+}
+.affirmation-control {
+  width: 40px;
+}
+
+
+
+
 /*GENERAL PURPOSE CLASSES*/
 .text-align-center {
 text-align: center;
 }
 
 /*BACKGROUND COLORS*/
-	/*DARK*/
-	.bkdcolor-dk-red {
-	background-color:#ff0000;
-	}
-	.bkdcolor-dk-yel {
-	background-color:#ffff00;
-	}
-	.bkdcolor-dk-blu {
-	background-color:#0000ff;
-	}
+/*DARK*/
+.bkdcolor-dk-red {
+background-color:#ff0000;
+}
+.bkdcolor-dk-yel {
+background-color:#ffff00;
+}
+.bkdcolor-dk-blu {
+background-color:#0000ff;
+}
 
-	/*LIGHT*/
-	.bkdcolor-lt-red {
-	background-color:#ff7f7f;
-	}
-	.bkdcolor-lt-yel {
-	background-color:#fffd7f;
-	}
-	.bkdcolor-lt-blu {
-	background-color:#7f7fff;
-	}
-	.bkdcolor-lt-gra {
-	background-color:#bfbfbf;
-	}
+/*LIGHT*/
+.bkdcolor-lt-red {
+background-color:#ff7f7f;
+}
+.bkdcolor-lt-yel {
+background-color:#fffd7f;
+}
+.bkdcolor-lt-blu {
+background-color:#7f7fff;
+}
+.bkdcolor-lt-gra {
+background-color:#bfbfbf;
+}
 
 /*TEXT COLORS*/
-	/*DARK*/
-	.color-dk-red {
-	color:#ff0000;
-	}
-	.color-dk-yel {
-	color:#ffff00;
-	}
-	.color-dk-blu {
-	color:#0000ff;
-	}
+/*DARK*/
+.color-dk-red {
+color:#ff0000;
+}
+.color-dk-yel {
+color:#ffff00;
+}
+.color-dk-blu {
+color:#0000ff;
+}
 
-	/*LIGHT*/
-	.color-lt-red {
-	color:#ff7f7f;
-	}
-	.color-lt-yel {
-	color:#fffd7f;
-	}
-	.color-lt-blu {
-	color:#7f7fff;
-	}
-	.color-lt-gra {
-	color:#bfbfbf;
-	}
+/*LIGHT*/
+.color-lt-red {
+color:#ff7f7f;
+}
+.color-lt-yel {
+color:#fffd7f;
+}
+.color-lt-blu {
+color:#7f7fff;
+}
+.color-lt-gra {
+color:#bfbfbf;
+}
 
 /*CLASSES FOR RENDERING CLAIMS*/
 .claim-box {

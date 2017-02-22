@@ -1,8 +1,8 @@
-{# The Claim Box #}
+<!-- The Claim Box -->
 
 
-<div class="media">
-    <div class="media-left">
+<div id="claim-box" class="media d-flex flex-row">
+    <div class="text-center affirmation-control d-flex flex-column justify-content-around">
         <span
             id = "claim-affirmation"
             data-affirmation-id="{{ affirmation.id }}"
@@ -16,9 +16,9 @@
                 fa-2x"
             id="affirm_button">
         </span>
-        <h4
+        <h4 style = "margin: 0rem"
             id = "num-affirmations"
-            class="media-heading text-center">
+            class="media-heading">
             {{ num_affirmations }}
         </h4>
     </div>
