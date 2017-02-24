@@ -1,5 +1,12 @@
-/* Sticky footer styles
--------------------------------------------------- */
+
+
+.debug {
+  border: 1px;
+  border-color: black;
+  border-style: solid;
+}
+
+/* Sticky footer styles */
 html {
   min-height: 100%;
   position: relative;
@@ -18,22 +25,7 @@ body {
 }
 
 
-.media {
-  border: 1px;
-  border-style: solid;
-  border-color: black;
-}
-.affirmation-control {
-  width: 40px;
-}
 
-
-
-
-/*GENERAL PURPOSE CLASSES*/
-.text-align-center {
-text-align: center;
-}
 
 /*BACKGROUND COLORS*/
 /*DARK*/
@@ -87,7 +79,3 @@ color:#7f7fff;
 color:#bfbfbf;
 }
 
-/*CLASSES FOR RENDERING CLAIMS*/
-.claim-box {
-border: 1px solid black ;
-}

@@ -1,45 +1,44 @@
 <!-- The Claim Box -->
 
 
-<div id="claim-box" class="media d-flex flex-row">
-    <div class="text-center affirmation-control d-flex flex-column justify-content-around">
-        <span
-            id = "claim-affirmation"
-            data-affirmation-id="{{ affirmation.id }}"
-            data-claim-id="{{ claim.id }}"
-            class="media-object fa
-                {% if affirmation %}
-                    fa-check
-                {% else %}
-                    fa-plus
-                {% endif %}
-                fa-2x"
-            id="affirm_button">
-        </span>
-        <h4 style = "margin: 0rem"
-            id = "num-affirmations"
-            class="media-heading">
-            {{ num_affirmations }}
-        </h4>
-    </div>
-    <div class="media-body">
-        {% if user.is_authenticated %}
-            <div class='btn-toolbar pull-right'>
-                <button type='button' id="edit-claim" class='btn btn-primary btn-sm'>Edit</button>
-            </div>
-        {% endif %}
-        <h4 class="media-heading">
-            <a id="claim-name"
+<div id="claim-box" class="card card-outline-primary">
+    <div class="card-block d-flex">
+        <div class="text-center d-flex flex-column justify-content-start pr-3">
+            <span id = "claim-affirmation"
+                data-affirmation-id="{{ affirmation.id }}"
                 data-claim-id="{{ claim.id }}"
-                contenteditable="false"
-                href="{% url 'viewClaim' claim.id %}">
-                {{ claim.name }}
-            </a>
-        </h4>
-        <p id="claim-content"
-            data-claim-id="{{ claim.id }}"
-            contenteditable="false">
-            {{ claim.content }}
-        </p>
+                class="fa pb-2 fa-2x
+                       {% if affirmation %} fa-check
+                       {% else %} fa-plus
+                       {% endif %}">
+            </span>
+            <h4 id = "num-affirmations"
+                class="m-0">
+                {{ num_affirmations }}
+            </h4>
+        </div>
+        <div>
+<!--             {% if user.is_authenticated %}
+                <div class='btn-toolbar pull-right'>
+                    <button type='button' id="edit-claim" class='btn btn-primary btn-sm m-2'>Edit</button>
+                </div>
+            {% endif %} -->
+            <h4 class="card-title">
+                <a id="claim-name"
+                    data-claim-id="{{ claim.id }}"
+                    contenteditable="false"
+                    href="{% url 'viewClaim' claim.id %}">
+                    {{ claim.name }}
+                </a>
+            </h4>
+            <p id="claim-content"
+               class="card-text"
+                data-claim-id="{{ claim.id }}"
+                contenteditable="false">
+                {{ claim.content }}
+            </p>
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+        </div>
     </div>
 </div>
