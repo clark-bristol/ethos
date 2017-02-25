@@ -1,133 +1,67 @@
 {% load staticfiles %}
 
 <!-- todo: get the right side of the navbar to align vertically -->
-<nav class="navbar navbar-toggleable-md navbar-light bg-faded mb-4">
+<nav class="navbar navbar-toggleable-sm navbar-light bg-faded mb-4">
   <div class="container">
 
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-
-      <ul class="navbar-nav d-flex align-items-center">
-          <li>
-            <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% static 'img/logo text.png' %}" style="height:18px"/></a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="{% url 'home' %}">Home</a>
-              <a class="dropdown-item" href="{% url 'about' %}">About</a>
-              <a class="dropdown-item" href="{% url 'meta' %}">Meta</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Claims</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="{% url 'browseClaims' %}">Browse</a>
-              <a class="dropdown-item" href="{% url 'contributeClaim' %}">Contribute</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Arguments</a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="{% url 'browseArguments' %}">Browse</a>
-              <a class="dropdown-item" href="{% url 'contributeArgument' %}">Contribute</a>
-            </div>
-          </li>
-        </ul>
-        <ul class="navbar-nav d-flex align-items-center">
-          {% if request.user.is_authenticated %}
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              {{ request.user }} (+{{request.user.standarduser.authority}})
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Profile</a>
-              <a class="dropdown-item" href="#">Contributions</a>
-              <a class="dropdown-item" href="{% url 'auth_logout' %}">Logout</a>
-            </div>
-          </li>
-          {% elif not "/accounts/login" in request.get_full_path %}
-          <li class="nav-item dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<strong class="caret"></strong></a>
-            <div class="dropdown-menu" style="padding-right:15px;">
-              <form class='navbar-form navbar-right' method='POST' action='{% url "auth_login" %}'>{% csrf_token%}
-                <input style="margin-bottom:10px" type='text' class='form-control' name='username' placeholder='Username' />
-                <input style="margin-bottom:10px" type='password' class='form-control' name='password' placeholder='Password' />
-                <button style="width: 100%" type='submit' class='btn btn-primary'>Login</button>
-              </form>
-            </div>
-          </li>
-          <li class="nav-item"><a href="{% url 'registration_register' %}">Register</a>
-          </li>
-          {% endif %}
-        </ul>
-
+    <a href="#" class="navbar-brand" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+      <img src="{% static 'img/logo text.png' %}" style="height:18px"/>
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+      <a class="dropdown-item" href="{% url 'home' %}">Home</a>
+      <a class="dropdown-item" href="{% url 'about' %}">About</a>
+      <a class="dropdown-item" href="{% url 'meta' %}">Meta</a>
     </div>
 
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Claims</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'browseClaims' %}">Browse</a>
+            <a class="dropdown-item" href="{% url 'contributeClaim' %}">Contribute</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Arguments</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'browseArguments' %}">Browse</a>
+            <a class="dropdown-item" href="{% url 'contributeArgument' %}">Contribute</a>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            {{ request.user }} (+{{request.user.standarduser.authority}})
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="#">Contributions</a>
+            <a class="dropdown-item" href="{% url 'auth_logout' %}">Logout</a>
+          </div>
+        </li>
+        {% elif not "/accounts/login" in request.get_full_path %}
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link" data-toggle="dropdown">Login<strong class="caret"></strong></a>
+          <div class="dropdown-menu">
+            <form class='navbar-form mx-3 my-2' method='POST' action='{% url "auth_login" %}'>{% csrf_token%}
+              <input type='text' class='form-control mb-3' name='username' placeholder='Username' />
+              <input type='password' class='form-control mb-3' name='password' placeholder='Password' />
+              <button type='submit' class='btn btn-primary'>Login</button>
+            </form>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'registration_register' %}">Register</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
   </div>
 </nav>
-
-<!-- Static navbar -->
-<!--
-<nav class="navbar navbar-default navbar-static-top" style="background-color:white">
-  <div class="container">
-    <ul class="nav navbar-nav">
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% static 'img/logo text.png' %}" style="height:18px"/></a>
-        <ul class="dropdown-menu">
-          <li><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'about' %}">About</a></li>
-          <li><a href="{% url 'meta' %}">Meta</a></li>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Claims</a>
-        <ul class="dropdown-menu">
-          <li><a href="{% url 'browseClaims' %}">Browse</a></li>
-          <li><a href="{% url 'contributeClaim' %}">Contribute</a></li>
-        </ul>
-      </li>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Arguments</a>
-        <ul class="dropdown-menu">
-          <li><a href="{% url 'browseArguments' %}">Browse</a></li>
-          <li><a href="{% url 'contributeArgument' %}">Contribute</a></li>
-        </ul>
-      </li>
-      <li>
-        <form class="nav navbar-nav navbar-form" role="search">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search">
-            </div>
-        </form>
-      </li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      {% if request.user.is_authenticated %}
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-          {{ request.user }} (+{{request.user.standarduser.authority}})
-        </a>
-        <ul class="dropdown-menu">
-          <li><a href="#">Profile</a></li>
-          <li><a href="#">Contributions</a></li>
-          <li><a href="{% url 'auth_logout' %}">Logout</a></li>
-        </ul>
-      </li>
-      {% elif not "/accounts/login" in request.get_full_path %}
-      <li class="dropdown">
-        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login<strong class="caret"></strong></a>
-        <div class="dropdown-menu" style="padding-right:15px;">
-          <form class='navbar-form navbar-right' method='POST' action='{% url "auth_login" %}'>{% csrf_token%}
-            <input style="margin-bottom:10px" type='text' class='form-control' name='username' placeholder='Username' />
-            <input style="margin-bottom:10px" type='password' class='form-control' name='password' placeholder='Password' />
-            <button style="width: 100%" type='submit' class='btn btn-primary'>Login</button>
-          </form>
-        </div>
-      </li>
-      <li><a href="{% url 'registration_register' %}">Register</a></li>
-      {% endif %}
-    </ul>
-  </div>
-</nav>
--->

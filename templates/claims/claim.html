@@ -1,7 +1,7 @@
 <!-- The Claim Box -->
 
 
-<div id="claim-box" class="card card-outline-primary">
+<div id="claim-box" class="card card-outline-primary mb-4">
     <div class="card-block d-flex">
         <div class="text-center d-flex flex-column justify-content-start pr-3">
             <span id = "claim-affirmation"
@@ -18,11 +18,6 @@
             </h4>
         </div>
         <div>
-<!--             {% if user.is_authenticated %}
-                <div class='btn-toolbar pull-right'>
-                    <button type='button' id="edit-claim" class='btn btn-primary btn-sm m-2'>Edit</button>
-                </div>
-            {% endif %} -->
             <h4 class="card-title">
                 <a id="claim-name"
                     data-claim-id="{{ claim.id }}"
@@ -40,5 +35,10 @@
             <a href="#" class="card-link">Card link</a>
             <a href="#" class="card-link">Another link</a>
         </div>
+        {% if user.is_authenticated %}
+            <div class='btn-toolbar align-self-start ml-auto'>
+                <button type='button' id="edit-claim" class='btn btn-primary btn-sm'>Edit</button>
+            </div>
+        {% endif %}
     </div>
 </div>
