@@ -58,3 +58,21 @@ def addAffirmationToGraph(claim, user):
     tx = graph.begin()
     tx.merge(subgraph, primary_label='name')
     tx.commit()
+
+
+# Remove Affirmation from Graph
+def removeAffirmationFromGraph(claim, user):
+
+    authenticate(settings.SECRET_NEO4J_DB_HOSTPORT,
+                 settings.SECRET_NEO4J_DB_USER,
+                 settings.SECRET_NEO4J_DB_PASSWORD)
+    graph = Graph()
+    claimNode = graph.find_one(label="Claim", property_key='claim_id', property_value=claim.id)
+    userNode = graph.find_one(label="User", property_key='user_id', property_value=user.id)
+    affirmsRelationship = graph.match_one(start_node=userNode, rel_type='Affirms', end_node=claimNode)
+    subgraph = affirmsRelationship
+    print(subgraph)
+    graph = Graph()
+    tx = graph.begin()
+    tx.separate(subgraph)
+    tx.commit()

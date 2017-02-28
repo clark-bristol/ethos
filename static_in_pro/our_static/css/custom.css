@@ -1,5 +1,5 @@
 
-
+/* Debug styles */
 .debug {
   border: 1px;
   border-color: black;
@@ -12,6 +12,7 @@ html {
   position: relative;
 }
 body {
+  /*this is getting overwritten for some reason by normalize.css. workaround: styles on the body in the base template*/
   margin-bottom: 4rem;
 }
 .footer {

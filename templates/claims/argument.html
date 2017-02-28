@@ -1,29 +1,29 @@
 {# The Argument Box #}
 
 
-<div class="media">
-    <div class="media-body">
-        <h3 class="media-heading">Argument:
-            <a id="argument-name"
-                data-argument-id="{{ argument.id }}"
-                contenteditable="false"
-                href="{% url 'viewArgument' argument.id %}">
-                {{ argument.name }}
-            </a>
-        </h3>
-        <div class="media">
-            <h3 class="media-heading">In Support of:</h3>
-            {% include "claims/claim.html" with claim=argument.supported_claim %}
-            <h3 class="media-heading">Based on:</h3>
-            <div class="media-left">
-                <div style="width:20px; border-left: thick solid #ff0000">
-                </div>
-            </div>
-            <div class="media-body">
-                {% for claim in argument.premise_claims.all %}
-                    {% include "claims/claim.html" %}
-                {% endfor %}
-            </div>
-        </div>
+<div id="argument-box" class="card card-outline-primary mb-4">
+  <div class="card-block">
+    <h4 class="card-title">
+      <a id="argument-name"
+        data-argument-id="{{ argument.id }}"
+        contenteditable="false"
+        href="{% url 'viewArgument' argument.id %}">
+        {{ argument.name }}
+      </a>
+    </h3>
+    <div class="d-flex">
+      <div class="d-flex w-25">
+        {% include "claims/claim-sm.html" with claim=argument.supported_claim %}
+        <span class="align-self-center fa fa-2x fa-arrow-left ml-4"></span>
+      </div>
+      <div class="d-flex w-75">
+        {% for claim in argument.premise_claims.all %}
+          <div class="d-flex w-50">
+            <span class="align-self-center fa fa-2x fa-plus mr-4"></span>
+            {% include "claims/claim-sm.html" %}
+          </div>
+        {% endfor %}
+      </div>
     </div>
+  </div>
 </div>

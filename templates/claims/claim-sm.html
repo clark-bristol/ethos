@@ -1,0 +1,23 @@
+<!-- The Claim Box -->
+
+
+<div id="claim-box" class="card card-outline-primary mb-4">
+  <div class="card-block d-flex">
+    <div>
+      <h4 class="card-title">
+        <a id="claim-name"
+          data-claim-id="{{ claim.id }}"
+          contenteditable="false"
+          href="{% url 'viewClaim' claim.id %}">
+          {{ claim.name }}
+        </a>
+      </h4>
+      <p id="claim-content"
+         class="card-text"
+          data-claim-id="{{ claim.id }}"
+          contenteditable="false">
+          {{ claim.content }}
+      </p>
+    </div>
+  </div>
+</div>

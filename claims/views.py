@@ -22,7 +22,10 @@ from rest_framework.renderers import JSONRenderer
 from django.utils.six import BytesIO
 from rest_framework.parsers import JSONParser
 # functions!
-from functions import addClaimAndUserToGraph, addArgumentToGraph, addAffirmationToGraph
+from functions import addClaimAndUserToGraph
+from functions import addArgumentToGraph
+from functions import addAffirmationToGraph
+from functions import removeAffirmationFromGraph
 
 #
 # Webpage Views #################################
@@ -109,6 +112,9 @@ def viewClaim(request, claim):
     context["num_affirmations"] = Affirmation.objects.filter(claim_id=claim).count()
     context["supporting_arguments"] = Argument.objects.filter(supported_claim_id=claim)
     # context["suggested_claims"] =
+
+# match (user {user_id: 1})-[:Affirms]->(claim)-[:Premise_Of]->(argument)-[:Supports]->(conclusion) return conclusion
+# match (claim)-[:Premise_Of]->(argument) return claim
 
     # print context
 
@@ -300,5 +306,8 @@ def affirmation_detail(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
+        affirmed_claim = Claim.objects.get(pk=affirmation.claim_id)
+        affirming_user = User.objects.get(pk=affirmation.user_id)
+        removeAffirmationFromGraph(affirmed_claim, affirming_user)
         affirmation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
