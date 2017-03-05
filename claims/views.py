@@ -22,18 +22,18 @@ from rest_framework.renderers import JSONRenderer
 from django.utils.six import BytesIO
 from rest_framework.parsers import JSONParser
 # functions!
-from functions import addClaimAndUserToGraph
+from functions import addClaimToGraph
+from functions import addUserToGraph
 from functions import addArgumentToGraph
 from functions import addAffirmationToGraph
 from functions import removeAffirmationFromGraph
+from functions import sync_graph
 
-#
-# Webpage Views #################################
-#
+
+# Webpage Views
+
 
 # Claim Form
-
-
 @require_http_methods(["GET", "POST"])
 def addClaim(request):
     form = ClaimForm(request.POST or None)
@@ -46,14 +46,15 @@ def addClaim(request):
         this_users_affirmations = []
         for e in Affirmation.objects.filter(user_id=request.user.id).order_by('claim_id'):
             this_users_affirmations.append(e.claim_id)
-        print this_users_affirmations
+        print(this_users_affirmations)
 
         # get list of affirmations to pass to template renderer
         user = User.objects.get(pk=request.user.id).standarduser
         user.authority += 1
         user.save()
 
-        addClaimAndUserToGraph(new_claim, request.user)
+        addClaimToGraph(new_claim)
+        addUserToGraph(request.user)
 
         return redirect("http://localhost:8000/claims/" + str(new_claim.pk))
 
@@ -95,6 +96,10 @@ def addArgument(request):
 
 # View Claim
 def viewClaim(request, claim):
+
+    if request.user.is_authenticated():
+        sync_graph(user=request.user)
+
     context = {}
 
     try:
@@ -103,7 +108,6 @@ def viewClaim(request, claim):
         raise Http404("Claim does not exist")
 
     try:
-        print request.user
         context["affirmation"] = Affirmation.objects.get(claim_id=claim, user_id=request.user)
     except Affirmation.DoesNotExist:
         context["affirmation"] = None
@@ -112,11 +116,6 @@ def viewClaim(request, claim):
     context["num_affirmations"] = Affirmation.objects.filter(claim_id=claim).count()
     context["supporting_arguments"] = Argument.objects.filter(supported_claim_id=claim)
     # context["suggested_claims"] =
-
-# match (user {user_id: 1})-[:Affirms]->(claim)-[:Premise_Of]->(argument)-[:Supports]->(conclusion) return conclusion
-# match (claim)-[:Premise_Of]->(argument) return claim
-
-    # print context
 
     return render(request, "claims/viewClaim.html", context)
 
@@ -131,8 +130,6 @@ def viewArgument(request, argument):
         raise Http404("Argument does not exist")
 
     context["argument"] = this_argument
-
-    print context
 
     return render(request, "claims/viewArgument.html", context)
 
@@ -268,16 +265,10 @@ def affirmation_list(request):
 
     elif request.method == 'POST':
         serializer = AffirmationSerializer(data=request.data)
-        # print serializer
         if serializer.is_valid():
-            serializer.save()
+            affirmation = serializer.save()
 
-            # connect to graph, start and commit new transaction
-            print serializer.validated_data
-            affirmed_claim = serializer.validated_data["claim"]
-            affirming_user = serializer.validated_data["user"]
-
-            addAffirmationToGraph(affirmed_claim, affirming_user)
+            addAffirmationToGraph(affirmation)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -306,8 +297,6 @@ def affirmation_detail(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        affirmed_claim = Claim.objects.get(pk=affirmation.claim_id)
-        affirming_user = User.objects.get(pk=affirmation.user_id)
-        removeAffirmationFromGraph(affirmed_claim, affirming_user)
+        removeAffirmationFromGraph(affirmation)
         affirmation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
