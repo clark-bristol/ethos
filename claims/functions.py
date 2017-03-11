@@ -7,6 +7,28 @@ from claims.models import Claim, Argument, Affirmation
 from django.contrib.auth.models import User
 
 
+# Recommendations
+def getClaimRecommendations(user):
+    # delete the graph
+    authenticate(settings.SECRET_NEO4J_DB_HOSTPORT,
+                 settings.SECRET_NEO4J_DB_USER,
+                 settings.SECRET_NEO4J_DB_PASSWORD)
+    graph = Graph()
+    query = '''MATCH (u:User {user_id:%s})-[:Affirms]->(sc1:Claim)-[:Premise_Of]->(a:Argument)-[:Supports]->(cc:Claim) // get all arguments supported by claims affirmed by the user
+                , (sc:Claim)-[:Premise_Of]->(a) // get all supporting claims of those arguments
+            WHERE NOT (u)-[:Affirms]->(cc) // where the user does not already affirm the argument's conclusion
+            WITH u, a, cc, COLLECT(sc) AS supporting_claims
+            WHERE ALL (sc IN supporting_claims WHERE (u)-[:Affirms]->(sc)) // where the user affirms all supporting claims of the argument
+            RETURN cc.claim_id AS claim_id, 'conclusion' AS rec_type
+            ''' % (user.id)
+
+    # get query results as a list of named tuples
+    result = list(graph.run(query))
+    # create recommendation_list: a list of tuples (claim_id, rec_type)
+    rec_list = [(result[a][0], result[a][1]) for a in range(len(result))]
+    return rec_list
+
+
 # Claims
 def addClaimToGraph(claim):
     authenticate(settings.SECRET_NEO4J_DB_HOSTPORT,
@@ -126,8 +148,8 @@ def sync_graph(user):
     authenticate(settings.SECRET_NEO4J_DB_HOSTPORT,
                  settings.SECRET_NEO4J_DB_USER,
                  settings.SECRET_NEO4J_DB_PASSWORD)
-    graph = Graph()
-    graph.run('MATCH (n) DETACH DELETE n')
+    # graph = Graph()
+    # graph.run('MATCH (n) DETACH DELETE n')
 
     for c in Claim.objects.all():
         # print(c)
@@ -144,3 +166,5 @@ def sync_graph(user):
     for aff in Affirmation.objects.all():
         # print(aff)
         addAffirmationToGraph(affirmation=aff)
+
+    getClaimRecommendations(user)
