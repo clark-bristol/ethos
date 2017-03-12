@@ -1,0 +1,17 @@
+<!-- https://docs.djangoproject.com/en/1.9/topics/class-based-views/generic-display/ -->
+
+{% extends "base.html" %}
+
+
+{% block content %}
+  <h2>Hi, {{ request.user }}!</h2>
+  <h4>Here are your recommended conclusions:</h4>
+  {% for claim in recommended_conclusions %}
+    {% include "claims/claim-sm.html" %}
+  {% endfor %}
+  <h4>Here are your recommended premises:</h4>
+  {% for claim in recommended_premises %}
+    {% include "claims/claim-sm.html" %}
+  {% endfor %}
+{% endblock %}
+

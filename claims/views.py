@@ -1,34 +1,27 @@
 from django.shortcuts import render, redirect
 from .forms import ClaimForm, ArgumentForm
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from claims.models import Claim, Argument, ArgumentPremise
-# Neo4J
-from py2neo import authenticate, Graph, Node, Relationship
+from claims.models import Claim, Argument, ArgumentPremise, Affirmation
 # List view
 from django.views.generic.list import ListView
 # import decorators for experimenting
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 # API!
-from claims.models import Claim, Affirmation
 from claims.serializers import UserSerializer, ClaimSerializer, AffirmationSerializer
-from rest_framework import generics, permissions, status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework.renderers import JSONRenderer
-from django.utils.six import BytesIO
-from rest_framework.parsers import JSONParser
 # functions!
+from functions import getClaimRecommendations
 from functions import addClaimToGraph
 from functions import addUserToGraph
 from functions import addArgumentToGraph
 from functions import addAffirmationToGraph
 from functions import removeAffirmationFromGraph
 from functions import sync_graph
-
 
 # Webpage Views
 
@@ -81,7 +74,7 @@ def addArgument(request):
         for claim_id in request.POST.getlist('premise_claims'):
             ArgumentPremise.objects.create(claim_id=int(claim_id), argument=new_argument)
 
-        addArgumentToGraph(new_argument, request.user)
+        addArgumentToGraph(new_argument)
 
         return redirect("http://localhost:8000/arguments/")
 
@@ -134,6 +127,28 @@ def viewArgument(request, argument):
     return render(request, "claims/viewArgument.html", context)
 
 
+# View Recommendations
+@login_required
+def recommendations(request):
+    context = {}
+
+    # get list of recommended claims
+    rl = getClaimRecommendations(request.user)
+    rl_concls = filter(lambda x: x['rec_type'] == 'conclusion', rl)
+    rl_concl_ids = [rl_concls[a][0] for a in range(len(rl_concls))]
+    rl_concl_claims = Claim.objects.filter(pk__in=rl_concl_ids)
+    context["recommended_conclusions"] = rl_concl_claims
+
+    # get list of recommended claims
+    rl = getClaimRecommendations(request.user)
+    rl_premises = filter(lambda x: x['rec_type'] == 'premise', rl)
+    rl_premise_ids = [rl_premises[a][0] for a in range(len(rl_premises))]
+    rl_premise_claims = Claim.objects.filter(pk__in=rl_premise_ids)
+    context["recommended_premises"] = rl_premise_claims
+
+    return render(request, "claims/recommendations.html", context)
+
+
 # List all Claims
 class ClaimListView(ListView):
     model = Claim
@@ -144,10 +159,7 @@ class ArgumentListView(ListView):
     model = Argument
 
 
-#
-# API Views: Users, Claims, Affirmations #####################
-#
-
+# API Views
 
 # API Views: Users
 

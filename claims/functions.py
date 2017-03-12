@@ -14,18 +14,34 @@ def getClaimRecommendations(user):
                  settings.SECRET_NEO4J_DB_USER,
                  settings.SECRET_NEO4J_DB_PASSWORD)
     graph = Graph()
-    query = '''MATCH (u:User {user_id:%s})-[:Affirms]->(sc1:Claim)-[:Premise_Of]->(a:Argument)-[:Supports]->(cc:Claim) // get all arguments supported by claims affirmed by the user
-                , (sc:Claim)-[:Premise_Of]->(a) // get all supporting claims of those arguments
-            WHERE NOT (u)-[:Affirms]->(cc) // where the user does not already affirm the argument's conclusion
-            WITH u, a, cc, COLLECT(sc) AS supporting_claims
-            WHERE ALL (sc IN supporting_claims WHERE (u)-[:Affirms]->(sc)) // where the user affirms all supporting claims of the argument
-            RETURN cc.claim_id AS claim_id, 'conclusion' AS rec_type
-            ''' % (user.id)
+    query_conclusions = '''
+        // get all arguments supported by claims affirmed by the user
+        MATCH (u:User {user_id:%s})-[:Affirms]->(sc1:Claim)-[:Premise_Of]->(a:Argument)-[:Supports]->(cc:Claim)
+            , (sc:Claim)-[:Premise_Of]->(a) // get all supporting claims of those arguments
+        WHERE NOT (u)-[:Affirms]->(cc) // where the user does not already affirm the argument's conclusion
+        WITH u, a, cc, COLLECT(sc) AS supporting_claims
+        WHERE ALL (sc IN supporting_claims WHERE (u)-[:Affirms]->(sc)) // where the user affirms all supporting claims of the argument
+        RETURN cc.claim_id AS claim_id, 'conclusion' AS rec_type
+        ''' % (user.id)
+
+    rec_list = list(graph.run(query_conclusions))
+
+    query_premises = '''
+        // get all arguments supported by claims affirmed by the user
+        MATCH (u:User {user_id:%s})-[:Affirms]->(sc1:Claim)-[:Premise_Of]->(a:Argument)-[:Supports]->(cc:Claim)
+            // get all supporting claims of those arguments
+            , (sc:Claim)-[:Premise_Of]->(a)
+        // where the user does affirm the argument's conclusion
+        WHERE (u)-[:Affirms]->(cc)
+        // return the premises that the user does not yet affirm
+        WITH u, a, cc, sc
+        WHERE NOT (u)-[:Affirms]->(sc)
+        RETURN sc.claim_id AS claim_id, 'premise' AS rec_type
+        ''' % (user.id)
 
     # get query results as a list of named tuples
-    result = list(graph.run(query))
-    # create recommendation_list: a list of tuples (claim_id, rec_type)
-    rec_list = [(result[a][0], result[a][1]) for a in range(len(result))]
+    rec_list += list(graph.run(query_premises))
+
     return rec_list
 
 
@@ -167,4 +183,4 @@ def sync_graph(user):
         # print(aff)
         addAffirmationToGraph(affirmation=aff)
 
-    getClaimRecommendations(user)
+    # getClaimRecommendations(user)
