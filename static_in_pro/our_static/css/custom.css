@@ -1,5 +1,5 @@
 /* experiment with gradients */
-.grad {
+.grad-gray-dtl {
     background: gray; /* For browsers that do not support gradients */
     background: linear-gradient(90deg,
                                 #BEBEBE 10%,
@@ -8,8 +8,20 @@
                                 Gainsboro 65%,
                                 #E8E8E8 90%); /* Standard syntax */
 }
-.card-gray {
-    border-color: #BEBEBE;
+.grad-gray-ltd {
+    background: gray; /* For browsers that do not support gradients */
+    background: linear-gradient(90deg,
+                                #E8E8E8 10%,
+                                Gainsboro 35%,
+                                LightGray 50%,
+                                #C8C8C8 65%,
+                                #BEBEBE 90%); /* Standard syntax */
+}
+.round-corners-l {
+    border-radius: 5px 0px 0px 5px;
+}
+.round-corners-r {
+    border-radius: 0px 5px 5px 0px;
 }
 .dk-gry {
     background-color: #BEBEBE; /* Standard syntax */
