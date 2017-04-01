@@ -15,13 +15,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 # functions!
-from functions import getClaimRecommendations
-from functions import addClaimToGraph
-from functions import addUserToGraph
-from functions import addArgumentToGraph
-from functions import addAffirmationToGraph
-from functions import removeAffirmationFromGraph
-from functions import sync_graph
+from . import functions as fcns
+# from functions import addClaimToGraph
+# from functions import addUserToGraph
+# from functions import addArgumentToGraph
+# from functions import addAffirmationToGraph
+# from functions import removeAffirmationFromGraph
+# from functions import sync_graph
 
 # Webpage Views
 
@@ -46,8 +46,8 @@ def addClaim(request):
         user.authority += 1
         user.save()
 
-        addClaimToGraph(new_claim)
-        addUserToGraph(request.user)
+        fcns.addClaimToGraph(new_claim)
+        fcns.addUserToGraph(request.user)
 
         return redirect("http://localhost:8000/claims/" + str(new_claim.pk))
 
@@ -74,7 +74,7 @@ def addArgument(request):
         for claim_id in request.POST.getlist('premise_claims'):
             ArgumentPremise.objects.create(claim_id=int(claim_id), argument=new_argument)
 
-        addArgumentToGraph(new_argument)
+        fcns.addArgumentToGraph(new_argument)
 
         return redirect("http://localhost:8000/arguments/")
 
@@ -91,7 +91,7 @@ def addArgument(request):
 def viewClaim(request, claim):
 
     if request.user.is_authenticated():
-        sync_graph(user=request.user)
+        fcns.sync_graph(user=request.user)
 
     context = {}
 
@@ -133,7 +133,7 @@ def recommendations(request):
     context = {}
 
     # get list of recommended claims
-    rl = getClaimRecommendations(request.user)
+    rl = fcns.getClaimRecommendations(request.user)
     rl_concls = filter(lambda x: x['rec_type'] == 'conclusion', rl)
     rl_concl_ids = [rl_concls[a][0] for a in range(len(rl_concls))]
     rl_concl_claims = Claim.objects.filter(pk__in=rl_concl_ids)
@@ -280,7 +280,7 @@ def affirmation_list(request):
         if serializer.is_valid():
             affirmation = serializer.save()
 
-            addAffirmationToGraph(affirmation)
+            fcns.addAffirmationToGraph(affirmation)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -309,6 +309,6 @@ def affirmation_detail(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        removeAffirmationFromGraph(affirmation)
+        fcns.removeAffirmationFromGraph(affirmation)
         affirmation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 import os
-from settings_secret import *
+from . import settings_secret as ss
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,7 +19,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-# REMOVED SECRET KEY
+# SECRET KEY
+SECRET_KEY = ss.secret_key
+SECRET_NEO4J_DB_USER = ss.secret_neo4j_db_user
+SECRET_NEO4J_DB_PASSWORD = ss.secret_neo4j_db_password
+SECRET_NEO4J_DB_HOSTPORT = ss.secret_neo4j_db_hostport
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -28,7 +32,7 @@ ALLOWED_HOSTS = []
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'positproject@gmail.com'
-EMAIL_HOST_PASSWORD = secret_email_password
+EMAIL_HOST_PASSWORD = ss.secret_email_password
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -97,12 +101,12 @@ DATABASES = {
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # },
     'default': {
-        'ENGINE': secret_postgres_db_engine,
-        'NAME': secret_postgres_db_name,
-        'USER': secret_postgres_db_user,
-        'PASSWORD': secret_postgres_db_password,
-        'HOST': secret_postgres_db_host,
-        'PORT': secret_postgres_db_port,
+        'ENGINE': ss.secret_postgres_db_engine,
+        'NAME': ss.secret_postgres_db_name,
+        'USER': ss.secret_postgres_db_user,
+        'PASSWORD': ss.secret_postgres_db_password,
+        'HOST': ss.secret_postgres_db_host,
+        'PORT': ss.secret_postgres_db_port,
     }
 }
 

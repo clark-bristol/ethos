@@ -164,8 +164,8 @@ def sync_graph(user):
     authenticate(settings.SECRET_NEO4J_DB_HOSTPORT,
                  settings.SECRET_NEO4J_DB_USER,
                  settings.SECRET_NEO4J_DB_PASSWORD)
-    # graph = Graph()
-    # graph.run('MATCH (n) DETACH DELETE n')
+    graph = Graph()
+    graph.run('MATCH (n) DETACH DELETE n')
 
     for c in Claim.objects.all():
         # print(c)

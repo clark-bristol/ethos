@@ -2,3 +2,8 @@ posit/settings_secret.py
 posit/settings_secret.pyc
 *.pyc
 *.pyo
+__pycache__/
+
+# Django stuff:
+*.log
+*.pot
