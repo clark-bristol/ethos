@@ -1,3 +1,24 @@
+/* experiment with gradients */
+.grad {
+    background: gray; /* For browsers that do not support gradients */
+    background: linear-gradient(90deg,
+                                #BEBEBE 10%,
+                                #C8C8C8 35%,
+                                LightGray 50%,
+                                Gainsboro 65%,
+                                #E8E8E8 90%); /* Standard syntax */
+}
+.card-gray {
+    border-color: #BEBEBE;
+}
+.dk-gry {
+    background-color: #BEBEBE; /* Standard syntax */
+}
+.lt-gry {
+    background-color: #E8E8E8; /* Standard syntax */
+}
+
+
 /* Debug styles */
 .debug {
   border: 1px;
