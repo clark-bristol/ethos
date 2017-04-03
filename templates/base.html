@@ -12,8 +12,9 @@
     <link rel="icon" href="../../favicon.ico">
     <title>{% block head_title %}Ethos{% endblock %}</title>
 
-    {% include 'head_css.html' %}
+    {% include 'base_js_head.html' %}
 
+    {% include 'head_css.html' %}
   </head>
   <body style="margin-bottom: 4rem">
     {% include 'navbar.html' %}
@@ -27,6 +28,6 @@
 
     {% include 'footer.html' %}
 
-    {% include 'head_js.html' %}
+    {% include 'base_js_body.html' %}
   </body>
 </html>

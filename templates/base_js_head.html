@@ -1,0 +1,9 @@
+{% load staticfiles %}
+
+<!-- Vue 2 -->
+<!-- <script src="{% static '/bootstrap4/js/bootstrap.js' %}"></script> -->
+<script src="{% static 'vue/vue.js' %}"></script>
+<!-- change delimiters since the default conflicts with django -->
+<script type="text/javascript">
+  Vue.options.delimiters = ['[[', ']]'];
+</script>
