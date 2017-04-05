@@ -9,7 +9,9 @@ from django.views.generic.list import ListView
 # import decorators for experimenting
 from django.views.decorators.http import require_http_methods
 # API!
-from claims.serializers import UserSerializer, ClaimSerializer, AffirmationSerializer
+from claims.serializers import UserSerializer
+from claims.serializers import ClaimSerializer
+from claims.serializers import AffirmationSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response

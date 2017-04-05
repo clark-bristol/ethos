@@ -78,7 +78,9 @@ def addArgumentToGraph(argument):
                  settings.SECRET_NEO4J_DB_PASSWORD)
     graph = Graph()
     tx = graph.begin()
-    argumentNode = Node("Argument", argument_id=argument.id, name=argument.name)
+    argumentNode = Node("Argument",
+                        argument_id=argument.id,
+                        name=argument.name)
     tx.merge(argumentNode, 'argument_id')
     for p in ArgumentPremise.objects.filter(argument_id=argument.id):
         premiseClaim = p.claim

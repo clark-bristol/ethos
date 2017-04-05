@@ -3,8 +3,6 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
-# for tags (http://django-taggit.readthedocs.org/en/latest/getting_started.html)
-# from taggit.managers import TaggableManager
 
 
 # Create your models here.
@@ -13,7 +11,6 @@ class Claim(models.Model):
     content = models.TextField(max_length=10000)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
-    # tags = TaggableManager()  # http://django-taggit.readthedocs.org/en/latest/getting_started.html
 
     class Meta:
         unique_together = ('name', 'content')
@@ -39,7 +36,9 @@ class Affirmation(models.Model):
 class Argument(models.Model):
     name = models.CharField(max_length=255)
     premise_claims = models.ManyToManyField(Claim, through='ArgumentPremise')
-    supported_claim = models.ForeignKey(Claim, on_delete=models.CASCADE, related_name='supporting_arguments')
+    supported_claim = models.ForeignKey(Claim,
+                                        on_delete=models.CASCADE,
+                                        related_name='supporting_arguments')
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
