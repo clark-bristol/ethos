@@ -10,7 +10,7 @@
             contenteditable="false"
             style="color: black;"
             href="{% url 'viewClaim' claim.id %}">
-            {{ claim.name }}
+            [[name]] [[editing]]
           </a>
         </div>
       </h4>
@@ -21,7 +21,7 @@
         class="align-self-center mb-0"
         data-claim-id="{{ claim.id }}"
         contenteditable="false">
-        {{ claim.content }}
+        [[ content ]]
       </p>
     </div>
     <div class='col-1 grad-gray-ltd'></div>
@@ -37,14 +37,48 @@
         </span>
         <h4 id = "num-affirmations"
           class="m-0">
-          {{ num_affirmations }}
+          [[ num_affirmations ]]
         </h4>
       </div>
     </div>
-<!--     {% if user.is_authenticated %}
+    {% if user.is_authenticated %}
       <div class='btn-toolbar align-self-start ml-auto'>
-        <button type='button' id="edit-claim" class='btn btn-primary btn-sm'>Edit</button>
+        <button type="button"
+                id="save-claim"
+                class="btn btn-danger btn-sm"
+                v-if="editing">
+          Save
+        </button>
+        <button type='button'
+                id="edit-claim"
+                class='btn btn-primary btn-sm'
+                v-on:click="toggleEditing"
+                v-if="!editing">
+          Edit
+        </button>
       </div>
-    {% endif %} -->
+    {% endif %}
   </div>
 </div>
+
+
+<script type="text/javascript">
+
+var claimbox = new Vue({
+  el: '#claim-box',
+  data: {
+    name: '{{ claim.name }}',
+    content: '{{ claim.content }}',
+    num_affirmations: '{{ num_affirmations }}',
+    editing: false
+  },
+  methods: {
+    toggleEditing: function () {
+      // this.message = this.message.split('').reverse().join('');
+      $('#claim-name, #claim-content').attr("contenteditable", "true");
+      claimbox.editing = true;
+    }
+  }
+});
+
+</script>
