@@ -1,82 +1,136 @@
 <!-- The Claim Box -->
 
 <div id="claim-box" class="mb-4">
-  <div class="card-block d-flex p-0">
-    <div class="dk-gry d-flex round-corners-l">
-      <h4 class="align-self-center mb-0">
-        <div class="p-3">
+  <div class="card-block d-flex border">
+    <div class="d-flex">
+      <div class="p-3">
+        <h4 class="align-self-center mb-0">
           <a id="claim-name"
             data-claim-id="{{ claim.id }}"
             contenteditable="false"
             style="color: black;"
             href="{% url 'viewClaim' claim.id %}">
-            [[name]] [[editing]]
+            [[claim_name]]
           </a>
-        </div>
-      </h4>
-    </div>
-    <div class='col-1 grad-gray-dtl'></div>
-    <div class="card-text lt-gry w-100 d-flex">
-      <p id="claim-content"
-        class="align-self-center mb-0"
-        data-claim-id="{{ claim.id }}"
-        contenteditable="false">
-        [[ content ]]
-      </p>
-    </div>
-    <div class='col-1 grad-gray-ltd'></div>
-    <div class="dk-gry round-corners-r">
-      <div class="text-center d-flex flex-column justify-content-start p-3">
-        <span id = "claim-affirmation"
-          data-affirmation-id="{{ affirmation.id }}"
-          data-claim-id="{{ claim.id }}"
-          class="fa pb-2 fa-2x
-                 {% if affirmation %} fa-check
-                 {% else %} fa-plus
-                 {% endif %}">
-        </span>
-        <h4 id = "num-affirmations"
-          class="m-0">
-          [[ num_affirmations ]]
         </h4>
       </div>
     </div>
-    {% if user.is_authenticated %}
-      <div class='btn-toolbar align-self-start ml-auto'>
-        <button type="button"
-                id="save-claim"
-                class="btn btn-danger btn-sm"
-                v-if="editing">
-          Save
-        </button>
-        <button type='button'
-                id="edit-claim"
-                class='btn btn-primary btn-sm'
-                v-on:click="toggleEditing"
-                v-if="!editing">
-          Edit
-        </button>
-      </div>
-    {% endif %}
+    <!-- <div class='text-center align-self-center col-1'></div> -->
+    <div class="card-text d-flex p-3 border-lr">
+      <p id="claim-content"
+        class="mb-0"
+        data-claim-id="{{ claim.id }}"
+        contenteditable="false">
+        [[ claim_content ]]
+      </p>
+    </div>
+    <nav class="nav flex-column">
+      <a class="nav-link"
+          v-if="[[affirmation_id]] == ''"
+          v-on:click="toggleAffirmation">
+        Agree
+      </a>
+      <a class="nav-link"
+          v-else
+          v-on:click="toggleAffirmation">
+        Un-Agree
+      </a>
+      <a class="nav-link" href="#">Support</a>
+      <a class="nav-link"
+          v-if="editing"
+          href="#">
+        Save
+      </a>
+      <a class="nav-link"
+          v-if="!editing"
+          v-on:click="toggleEditing"
+          href="#">
+        Edit
+      </a>
+      <a class="nav-link"
+          v-on:click="toggleEditing"
+          v-else
+          href="#">
+        Done
+      </a>
+    </nav>
   </div>
 </div>
 
 
+<script
+  src="https://code.jquery.com/jquery-3.1.1.js"
+  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+  crossorigin="anonymous">
+</script>
 <script type="text/javascript">
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
 
 var claimbox = new Vue({
   el: '#claim-box',
   data: {
-    name: '{{ claim.name }}',
-    content: '{{ claim.content }}',
+    user_id: '{{ user.id }}',
+    claim_id: '{{ claim.id }}',
+    claim_name: '{{ claim.name }}',
+    claim_content: '{{ claim.content }}',
+    affirmation_id: '{{ affirmation.id }}',
     num_affirmations: '{{ num_affirmations }}',
     editing: false
   },
   methods: {
     toggleEditing: function () {
       // this.message = this.message.split('').reverse().join('');
-      $('#claim-name, #claim-content').attr("contenteditable", "true");
-      claimbox.editing = true;
+      if (this.editing === false) {
+        $('#claim-name, #claim-content').attr("contenteditable", "true");
+        this.editing = true;
+      }
+      else {
+        $('#claim-name, #claim-content').attr("contenteditable", "false");
+        this.editing = false;
+      }
+    },
+    toggleAffirmation: function() {
+      if (this.affirmation_id === '') {
+        console.log("hi!");
+        var data = JSON.stringify({ "claim" : this.claim_id, "user" : this.user_id, "csrf_token" : csrftoken });
+        console.log(data);
+        $.ajax({
+          "type": "POST",
+          "dataType": "json",
+          "url": "http://localhost:8000/api/affirmations/",
+          "data": data,
+          "contentType": "application/json",
+          "success": function(result) {
+             console.log("Posted!");
+          },
+        });
+      }
+      else {
+        console.log("nop");
+        var url = "http://localhost:8000/api/affirmations/".concat(this.affirmation_id.toString()).concat("/");
+        $.ajax( {
+            "type": "DELETE",
+            "url": url,
+            "success": function(result) {
+               console.log("Deleted!");
+            },
+        });
+      }
     }
   }
 });

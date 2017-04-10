@@ -1,4 +1,18 @@
 /* experiment with gradients */
+.border-l {
+    border-left:1px solid silver;
+}
+.border-r {
+    border-right:1px solid silver;
+}
+.border-lr {
+    border-right:1px solid silver;
+    border-left:1px solid silver;
+}
+.border {
+    border:1px solid silver;
+    border-radius: 5px;
+}
 .grad-gray-dtl {
     background: gray; /* For browsers that do not support gradients */
     background: linear-gradient(90deg,
