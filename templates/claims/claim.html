@@ -10,7 +10,7 @@
             contenteditable="false"
             style="color: black;"
             href="{% url 'viewClaim' claim.id %}">
-            [[claim_name]]
+            [[claim_name]] [[affirmation_id]]
           </a>
         </h4>
       </div>
@@ -27,12 +27,14 @@
     <nav class="nav flex-column">
       <a class="nav-link"
           v-if="[[affirmation_id]] == ''"
-          v-on:click="toggleAffirmation">
+          v-on:click="toggleAffirmation"
+          href="#">
         Agree
       </a>
       <a class="nav-link"
           v-else
-          v-on:click="toggleAffirmation">
+          v-on:click="toggleAffirmation"
+          href="#">
         Un-Agree
       </a>
       <a class="nav-link" href="#">Support</a>
@@ -116,9 +118,13 @@ var claimbox = new Vue({
           "data": data,
           "contentType": "application/json",
           "success": function(result) {
-             console.log("Posted!");
+             claimbox.affirmation_id = result.id;
+             claimbox.claim_name = 'poop';
+             console.log(claimbox.affirmation_id);
+             console.log(claimbox.claim_name);
           },
         });
+        affirmation_id = 7;
       }
       else {
         console.log("nop");
