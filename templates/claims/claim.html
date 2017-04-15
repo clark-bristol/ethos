@@ -1,61 +1,63 @@
 <!-- The Claim Box -->
 
-<div id="claim-box" class="mb-4">
-  <div class="card-block d-flex border">
-    <div class="d-flex p-3">
-      <h4 class="align-self-center mb-0">
+<div id="claim-box" class="mb-2">
+  <div class="card-block d-flex flex-column border">
+    <div id="claim-header"
+         class="d-flex justify-content-between
+                border-b mb-3">
+      <h4 class="align-self-center">
         <a id="claim-name"
           style="color: black;"
           href="{% url 'viewClaim' claim.id %}">
           [[claim_name]]
         </a>
+        <i class="fa fa-check"
+           v-if="[[affirmation_id]] == ''"
+           v-on:click="toggleAffirmation"
+           title="Click here if you agree with this claim!"
+           style="color:#D5DBDB"
+           aria-hidden="true">
+        </i>
+        <i class="fa fa-check"
+           v-else
+           v-on:click="toggleAffirmation"
+           title="Click here to revoke your agreement with this claim!"
+           style="color:#27ae60"
+           aria-hidden="true">
+        </i>
       </h4>
+      <div class="claim-box-nav d-flex">
+        <nav class="nav flex-row">
+          <a class="nav-link"
+              v-if="!editing"
+              v-on:click="toggleEditing"
+              href="#">
+            Edit
+          </a>
+          <a class="nav-link"
+              v-if="editing"
+              v-on:click="saveClaim"
+              href="#">
+            Save
+          </a>
+          <a class="nav-link"
+              v-show="editing"
+              href="{% url 'viewClaim' claim.id %}">
+            Cancel
+          </a>
+        </nav>
+      </div>
     </div>
-    <div class="card-text d-flex p-3 border-lr">
-      <p id="claim-content"
-         class="align-self-center mb-0"
+    <div id="claim-content"
+         class="card-text d-flex">
+      <p class="align-self-center mb-0"
          v-if="!editing">
         [[ claim_content ]]
       </p>
-      <textarea v-model="claim_content"
+      <textarea class="w-100"
+                v-model="claim_content"
                 v-else="">
       </textarea>
-    </div>
-    <div class="">
-      <nav class="nav flex-column">
-        <a class="nav-link"
-            v-if="[[affirmation_id]] == ''"
-            v-on:click="toggleAffirmation"
-            href="#">
-          Agree
-        </a>
-        <a class="nav-link"
-            v-else
-            v-on:click="toggleAffirmation"
-            href="#">
-          Un-Agree
-        </a>
-        <a class="nav-link" href="#">
-          Support
-        </a>
-        <a class="nav-link"
-            v-if="!editing"
-            v-on:click="toggleEditing"
-            href="#">
-          Edit
-        </a>
-        <a class="nav-link"
-            v-if="editing"
-            v-on:click="saveClaim"
-            href="#">
-          Save
-        </a>
-        <a class="nav-link"
-            v-show="editing"
-            href="{% url 'viewClaim' claim.id %}">
-          Cancel
-        </a>
-      </nav>
     </div>
   </div>
 </div>
