@@ -9,6 +9,16 @@
     border-right:1px solid silver;
     border-left:1px solid silver;
 }
+.border-t {
+    border-top:1px solid silver;
+}
+.border-b {
+    border-bottom:1px solid silver;
+}
+.border-tb {
+    border-top:1px solid silver;
+    border-bottom:1px solid silver;
+}
 .border {
     border:1px solid silver;
     border-radius: 5px;
