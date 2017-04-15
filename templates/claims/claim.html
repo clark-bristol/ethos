@@ -2,60 +2,61 @@
 
 <div id="claim-box" class="mb-4">
   <div class="card-block d-flex border">
-    <div class="d-flex">
-      <div class="p-3">
-        <h4 class="align-self-center mb-0">
-          <a id="claim-name"
-            data-claim-id="{{ claim.id }}"
-            contenteditable="false"
-            style="color: black;"
-            href="{% url 'viewClaim' claim.id %}">
-            [[claim_name]] [[affirmation_id]]
-          </a>
-        </h4>
-      </div>
+    <div class="d-flex p-3">
+      <h4 class="align-self-center mb-0">
+        <a id="claim-name"
+          style="color: black;"
+          href="{% url 'viewClaim' claim.id %}">
+          [[claim_name]]
+        </a>
+      </h4>
     </div>
-    <!-- <div class='text-center align-self-center col-1'></div> -->
     <div class="card-text d-flex p-3 border-lr">
       <p id="claim-content"
-        class="mb-0"
-        data-claim-id="{{ claim.id }}"
-        contenteditable="false">
+         class="align-self-center mb-0"
+         v-if="!editing">
         [[ claim_content ]]
       </p>
+      <textarea v-model="claim_content"
+                v-else="">
+      </textarea>
     </div>
-    <nav class="nav flex-column">
-      <a class="nav-link"
-          v-if="[[affirmation_id]] == ''"
-          v-on:click="toggleAffirmation"
-          href="#">
-        Agree
-      </a>
-      <a class="nav-link"
-          v-else
-          v-on:click="toggleAffirmation"
-          href="#">
-        Un-Agree
-      </a>
-      <a class="nav-link" href="#">Support</a>
-      <a class="nav-link"
-          v-if="editing"
-          href="#">
-        Save
-      </a>
-      <a class="nav-link"
-          v-if="!editing"
-          v-on:click="toggleEditing"
-          href="#">
-        Edit
-      </a>
-      <a class="nav-link"
-          v-on:click="toggleEditing"
-          v-else
-          href="#">
-        Done
-      </a>
-    </nav>
+    <div class="">
+      <nav class="nav flex-column">
+        <a class="nav-link"
+            v-if="[[affirmation_id]] == ''"
+            v-on:click="toggleAffirmation"
+            href="#">
+          Agree
+        </a>
+        <a class="nav-link"
+            v-else
+            v-on:click="toggleAffirmation"
+            href="#">
+          Un-Agree
+        </a>
+        <a class="nav-link" href="#">
+          Support
+        </a>
+        <a class="nav-link"
+            v-if="!editing"
+            v-on:click="toggleEditing"
+            href="#">
+          Edit
+        </a>
+        <a class="nav-link"
+            v-if="editing"
+            v-on:click="saveClaim"
+            href="#">
+          Save
+        </a>
+        <a class="nav-link"
+            v-show="editing"
+            href="{% url 'viewClaim' claim.id %}">
+          Cancel
+        </a>
+      </nav>
+    </div>
   </div>
 </div>
 
@@ -98,19 +99,20 @@ var claimbox = new Vue({
     toggleEditing: function () {
       // this.message = this.message.split('').reverse().join('');
       if (this.editing === false) {
-        $('#claim-name, #claim-content').attr("contenteditable", "true");
         this.editing = true;
       }
       else {
-        $('#claim-name, #claim-content').attr("contenteditable", "false");
         this.editing = false;
       }
     },
+    cancelEditing: function () {
+      // this.message = this.message.split('').reverse().join('');
+      this.toggleEditing();
+    },
     toggleAffirmation: function() {
       if (this.affirmation_id === '') {
-        console.log("hi!");
         var data = JSON.stringify({ "claim" : this.claim_id, "user" : this.user_id, "csrf_token" : csrftoken });
-        console.log(data);
+        // console.log(data);
         $.ajax({
           "type": "POST",
           "dataType": "json",
@@ -118,25 +120,43 @@ var claimbox = new Vue({
           "data": data,
           "contentType": "application/json",
           "success": function(result) {
-             claimbox.affirmation_id = result.id;
-             claimbox.claim_name = 'poop';
-             console.log(claimbox.affirmation_id);
-             console.log(claimbox.claim_name);
+            claimbox.affirmation_id = result.id;
+            console.log("Affirmed!");
           },
         });
-        affirmation_id = 7;
       }
       else {
-        console.log("nop");
         var url = "http://localhost:8000/api/affirmations/".concat(this.affirmation_id.toString()).concat("/");
         $.ajax( {
             "type": "DELETE",
             "url": url,
             "success": function(result) {
-               console.log("Deleted!");
+              claimbox.affirmation_id = '';
+              console.log("Un-Affirmed!");
             },
         });
       }
+    },
+    saveClaim: function() {
+      var data = JSON.stringify({ "id" : this.claim_id,
+                                  "name" : this.claim_name,
+                                  "content" : this.claim_content,
+                                  // "csrf_token" : csrftoken
+                                });
+      console.log(data);
+      // console.log(data);
+      $.ajax({
+        "type": "PUT",
+        "dataType": "json",
+        "url": "http://localhost:8000/api/claims/".concat(this.claim_id).concat("/"),
+        "data": data,
+        "contentType": "application/json",
+        "success": function(result) {
+          claimbox.affirmation_id = result.id;
+          console.log("Claim Updated!");
+        },
+      });
+      this.toggleEditing();
     }
   }
 });
