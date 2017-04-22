@@ -16,21 +16,16 @@
     {% include 'base_js_head.html' %}
     {% include 'base_css_head.html' %}
   </head>
-  <body style="margin-bottom: 4rem">
+  <body class='mb-4'>
     <div id="app">
-
-    {% include 'navbar.html' %}
-
-    <div class="container">
-      {% block content %}
-      {% endblock %}
+      {% include 'navbar.html' %}
+      <div class="container">
+        {% block content %}
+        {% endblock %}
+      </div>
+      {% include 'footer.html' %}
     </div>
-
-    {% include 'footer.html' %}
-
     {% include 'base_js_body.html' %}
-
-    </div>
   </body>
 </html>
 
@@ -44,7 +39,7 @@
           <a id="claim-name"
             style="color: black;"
             href="{% url 'viewClaim' claim.id %}">
-            [[ claim.claim_name ]]
+            [[ claim.name ]]
           </a>
           <i class="fa fa-check"
              v-if="[[ claim.affirmation_id ]] == ''"
@@ -64,19 +59,19 @@
         <div class="claim-box-nav d-flex">
           <nav class="nav flex-row">
             <a class="nav-link"
-                v-if="!editing"
+                v-if="!claim.editing"
                 v-on:click="toggleEditing"
                 href="#">
               Edit
             </a>
             <a class="nav-link"
-                v-if="editing"
+                v-if="claim.editing"
                 v-on:click="saveClaim"
                 href="#">
               Save
             </a>
             <a class="nav-link"
-                v-show="editing"
+                v-show="claim.editing"
                 href="{% url 'viewClaim' claim.id %}">
               Cancel
             </a>
@@ -86,11 +81,11 @@
       <div id="claim-content"
            class="card-text d-flex">
         <p class="align-self-center mb-0"
-           v-if="!editing">
-          [[ claim.claim_content ]]
+           v-if="!claim.editing">
+          [[ claim.content ]]
         </p>
         <textarea class="w-100"
-                  v-model="claim_content"
+                  v-model="claim.content"
                   v-else="">
         </textarea>
       </div>
@@ -127,7 +122,7 @@ var csrftoken = getCookie('csrftoken');
 
 Vue.component('claim-box', {
   template: '#claim-box-template',
-  props: ['claim'],
+  props: ['claim','user'],
   // data: function () {
   //   return {
   //     upvoted: false,
@@ -149,8 +144,11 @@ Vue.component('claim-box', {
       this.toggleEditing();
     },
     toggleAffirmation: function() {
-      if (this.affirmation_id === '') {
-        var data = JSON.stringify({ "claim" : this.claim_id, "user" : this.user_id, "csrf_token" : csrftoken });
+      if (!this.affirmation_id) {
+        console.log('blank');
+        console.log(this.claim.id);
+        console.log(this.user.id);
+        var data = JSON.stringify({ "claim" : this.claim.id, "user" : this.user.id, "csrf_token" : csrftoken });
         // console.log(data);
         $.ajax({
           "type": "POST",
@@ -165,7 +163,8 @@ Vue.component('claim-box', {
         });
       }
       else {
-        var url = "http://localhost:8000/api/affirmations/".concat(this.affirmation_id.toString()).concat("/");
+        console.log('not blank');
+        var url = "http://localhost:8000/api/affirmations/".concat(this.claim.affirmation_id.toString()).concat("/");
         $.ajax( {
             "type": "DELETE",
             "url": url,
@@ -177,9 +176,9 @@ Vue.component('claim-box', {
       }
     },
     saveClaim: function() {
-      var data = JSON.stringify({ "id" : this.claim_id,
-                                  "name" : this.claim_name,
-                                  "content" : this.claim_content,
+      var data = JSON.stringify({ "id" : this.claim.id,
+                                  "name" : this.claim.name,
+                                  "content" : this.claim.content,
                                   // "csrf_token" : csrftoken
                                 });
       console.log(data);
@@ -187,7 +186,7 @@ Vue.component('claim-box', {
       $.ajax({
         "type": "PUT",
         "dataType": "json",
-        "url": "http://localhost:8000/api/claims/".concat(this.claim_id).concat("/"),
+        "url": "http://localhost:8000/api/claims/".concat(this.claim.id).concat("/"),
         "data": data,
         "contentType": "application/json",
         "success": function(result) {
@@ -203,12 +202,14 @@ Vue.component('claim-box', {
 var vm = new Vue({
   el: '#app',
   data: {
+    user: {
+      id: '{{ user.id }}',
+    },
     claims: [
       {
-        user_id: '{{ user.id }}',
-        claim_id: '{{ claim.id }}',
-        claim_name: '{{ claim.name }}',
-        claim_content: '{{ claim.content }}',
+        id: '{{ claim.id }}',
+        name: '{{ claim.name }}',
+        content: '{{ claim.content }}',
         affirmation_id: '{{ affirmation.id }}',
         num_affirmations: '{{ num_affirmations }}',
         editing: false
