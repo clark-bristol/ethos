@@ -29,6 +29,14 @@
   </body>
 </html>
 
+
+
+
+
+
+
+
+
 <template id="claim-box-template">
   <div class="mb-2">
     <div class="card-block d-flex flex-column border">
@@ -123,33 +131,25 @@ var csrftoken = getCookie('csrftoken');
 Vue.component('claim-box', {
   template: '#claim-box-template',
   props: ['claim','user'],
-  // data: function () {
-  //   return {
-  //     upvoted: false,
-  //     downvoted: false
-  //   };
-  // },
   methods: {
     toggleEditing: function () {
-      // this.message = this.message.split('').reverse().join('');
-      if (this.editing === false) {
-        this.editing = true;
+      if (this.claim.editing === false) {
+        this.claim.editing = true;
       }
       else {
-        this.editing = false;
+        this.claim.editing = false;
       }
     },
     cancelEditing: function () {
       // this.message = this.message.split('').reverse().join('');
-      this.toggleEditing();
+      this.claim.editing = false;
     },
     toggleAffirmation: function() {
-      if (!this.affirmation_id) {
+      if (!this.claim.affirmation_id) {
         console.log('blank');
-        console.log(this.claim.id);
-        console.log(this.user.id);
         var data = JSON.stringify({ "claim" : this.claim.id, "user" : this.user.id, "csrf_token" : csrftoken });
         // console.log(data);
+        element = this;
         $.ajax({
           "type": "POST",
           "dataType": "json",
@@ -157,7 +157,7 @@ Vue.component('claim-box', {
           "data": data,
           "contentType": "application/json",
           "success": function(result) {
-            this.affirmation_id = result.id;
+            element.claim.affirmation_id = result.id;
             console.log("Affirmed!");
           },
         });
@@ -165,11 +165,12 @@ Vue.component('claim-box', {
       else {
         console.log('not blank');
         var url = "http://localhost:8000/api/affirmations/".concat(this.claim.affirmation_id.toString()).concat("/");
+        element = this;
         $.ajax( {
             "type": "DELETE",
             "url": url,
             "success": function(result) {
-              this.affirmation_id = '';
+              element.claim.affirmation_id = '';
               console.log("Un-Affirmed!");
             },
         });
@@ -183,6 +184,7 @@ Vue.component('claim-box', {
                                 });
       console.log(data);
       // console.log(data);
+      element = this;
       $.ajax({
         "type": "PUT",
         "dataType": "json",
@@ -190,7 +192,7 @@ Vue.component('claim-box', {
         "data": data,
         "contentType": "application/json",
         "success": function(result) {
-          claimbox.affirmation_id = result.id;
+          element.claim.id = result.id;
           console.log("Claim Updated!");
         },
       });
