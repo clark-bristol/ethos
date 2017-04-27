@@ -6,32 +6,196 @@
 
 
 {% block content %}
-  {% include "claims/claim.html" %}
-  <div class="d-flex flex-row">
-    <div class="d-flex flex-column w-100">
-      <i class="fa fa-arrow-up fa-2x d-inline-flex align-self-center mb-2"
-         style="color:#3498db"
-         aria-hidden="true">
-      </i>
-      <div id="supporting-arguments"
-           class="card-block border pt-2">
-        abs
+  <div id="claim_single">
+    {% include "claims/claim.html" %}
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-column w-100">
+        <i class="fa fa-arrow-up fa-2x d-inline-flex align-self-center mb-2"
+           style="color:#3498db"
+           aria-hidden="true">
+        </i>
+        <div id="supporting-arguments"
+             class="card-block border pt-2">
+          abs
+        </div>
       </div>
-    </div>
-    <div style="width: 50px">
-    </div>
-    <div class="d-flex flex-column w-100">
-      <i class="fa fa-arrow-down fa-2x d-inline-flex align-self-center mb-2"
-         style="color:#f1c40f"
-         aria-hidden="true">
-      </i>
-      <div id="supporting-arguments"
-           class="card-block border pt-2">
-        abs
+      <div style="width: 50px">
+      </div>
+      <div class="d-flex flex-column w-100">
+        <i class="fa fa-arrow-down fa-2x d-inline-flex align-self-center mb-2"
+           style="color:#f1c40f"
+           aria-hidden="true">
+        </i>
+        <div id="supporting-arguments"
+             class="card-block border pt-2">
+          abs
+        </div>
       </div>
     </div>
   </div>
-{% endblock %}
 
-<!-- style="padding:0; margin:0" -->
-<!--  -->
+
+
+<!-- Begin Vue.js stuff -->
+
+<template id="claim-box-template">
+  <div class="mb-2">
+    <div class="card-block d-flex flex-column border">
+      <div id="claim-header"
+           class="d-flex justify-content-between
+                  border-b mb-3">
+        <h4 class="align-self-center">
+          <a id="claim-name"
+            style="color: black;"
+            href="{% url 'viewClaim' claim.id %}">
+            [[ claim.name ]]
+          </a>
+          <i class="fa fa-check"
+             v-if="[[ claim.affirmation_id ]] == ''"
+             v-on:click="toggleAffirmation"
+             title="Click here if you agree with this claim!"
+             style="color:#D5DBDB"
+             aria-hidden="true">
+          </i>
+          <i class="fa fa-check"
+             v-else
+             v-on:click="toggleAffirmation"
+             title="Click here to revoke your agreement with this claim!"
+             style="color:#27ae60"
+             aria-hidden="true">
+          </i>
+        </h4>
+        <div class="claim-box-nav d-flex">
+          <nav class="nav flex-row">
+            <a class="nav-link"
+                v-if="!claim.editing"
+                v-on:click="toggleEditing"
+                href="#">
+              Edit
+            </a>
+            <a class="nav-link"
+                v-if="claim.editing"
+                v-on:click="saveClaim"
+                href="#">
+              Save
+            </a>
+            <a class="nav-link"
+                v-show="claim.editing"
+                href="{% url 'viewClaim' claim.id %}">
+              Cancel
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div id="claim-content"
+           class="card-text d-flex">
+        <p class="align-self-center mb-0"
+           v-if="!claim.editing">
+          [[ claim.content ]]
+        </p>
+        <textarea class="w-100"
+                  v-model="claim.content"
+                  v-else="">
+        </textarea>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script type="text/javascript">
+  Vue.component('claim-box', {
+    template: '#claim-box-template',
+    props: ['claim','user'],
+    methods: {
+      toggleEditing: function () {
+        if (this.claim.editing === false) {
+          this.claim.editing = true;
+        }
+        else {
+          this.claim.editing = false;
+        }
+      },
+      cancelEditing: function () {
+        // this.message = this.message.split('').reverse().join('');
+        this.claim.editing = false;
+      },
+      toggleAffirmation: function() {
+        if (!this.claim.affirmation_id) {
+          console.log('blank');
+          var data = JSON.stringify({ "claim" : this.claim.id, "user" : this.user.id, "csrf_token" : csrftoken });
+          // console.log(data);
+          element = this;
+          $.ajax({
+            "type": "POST",
+            "dataType": "json",
+            "url": "http://localhost:8000/api/affirmations/",
+            "data": data,
+            "contentType": "application/json",
+            "success": function(result) {
+              element.claim.affirmation_id = result.id;
+              console.log("Affirmed!");
+            },
+          });
+        }
+        else {
+          console.log('not blank');
+          var url = "http://localhost:8000/api/affirmations/".concat(this.claim.affirmation_id.toString()).concat("/");
+          element = this;
+          $.ajax( {
+              "type": "DELETE",
+              "url": url,
+              "success": function(result) {
+                element.claim.affirmation_id = '';
+                console.log("Un-Affirmed!");
+              },
+          });
+        }
+      },
+      saveClaim: function() {
+        var data = JSON.stringify({ "id" : this.claim.id,
+                                    "name" : this.claim.name,
+                                    "content" : this.claim.content,
+                                    // "csrf_token" : csrftoken
+                                  });
+        console.log(data);
+        // console.log(data);
+        element = this;
+        $.ajax({
+          "type": "PUT",
+          "dataType": "json",
+          "url": "http://localhost:8000/api/claims/".concat(this.claim.id).concat("/"),
+          "data": data,
+          "contentType": "application/json",
+          "success": function(result) {
+            element.claim.id = result.id;
+            console.log("Claim Updated!");
+          },
+        });
+        this.toggleEditing();
+      }
+    }
+  });
+
+  var vm = new Vue({
+    el: '#claim_single',
+    data: {
+      user: {
+        id: '{{ user.id }}',
+      },
+      claims: [
+        {
+          id: '{{ claim.id }}',
+          name: '{{ claim.name }}',
+          content: '{{ claim.content }}',
+          affirmation_id: '{{ affirmation.id }}',
+          num_affirmations: '{{ num_affirmations }}',
+          editing: false
+        },
+      ],
+    },
+  });
+</script>
+
+
+{% endblock %}
