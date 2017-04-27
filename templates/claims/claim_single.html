@@ -47,7 +47,7 @@
         <h4 class="align-self-center">
           <a id="claim-name"
             style="color: black;"
-            href="{% url 'viewClaim' claim.id %}">
+            href="{% url 'ClaimView' claim.id %}">
             [[ claim.name ]]
           </a>
           <i class="fa fa-check"
@@ -81,7 +81,7 @@
             </a>
             <a class="nav-link"
                 v-show="claim.editing"
-                href="{% url 'viewClaim' claim.id %}">
+                href="{% url 'ClaimView' claim.id %}">
               Cancel
             </a>
           </nav>

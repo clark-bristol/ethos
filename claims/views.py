@@ -90,7 +90,7 @@ def addArgument(request):
 
 
 # View Claim
-def viewClaim(request, claim):
+def ClaimView(request, claim):
 
     if request.user.is_authenticated():
         fcns.sync_graph(user=request.user)
@@ -112,11 +112,11 @@ def viewClaim(request, claim):
     context["supporting_arguments"] = Argument.objects.filter(supported_claim_id=claim)
     # context["suggested_claims"] =
 
-    return render(request, "claims/viewClaim.html", context)
+    return render(request, "claims/claim_single.html", context)
 
 
 # View Argument
-def viewArgument(request, argument):
+def ArgumentView(request, argument):
     context = {}
 
     try:
