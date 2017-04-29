@@ -77,4 +77,4 @@ Vue.component('claim-box', {
   }
 });
 
-var vm = new Vue(test_json);
+var vm = new Vue(vm_config);
