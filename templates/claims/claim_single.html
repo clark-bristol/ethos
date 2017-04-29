@@ -7,7 +7,10 @@
 
 {% block content %}
   <div id="claim_single">
-    {% include "claims/claim.html" %}
+    <claim-box v-for="claim in claims"
+           :claim="claim"
+           :user="user">
+    </claim-box>
     <div class="d-flex flex-row">
       <div class="d-flex flex-column w-100">
         <i class="fa fa-arrow-up fa-2x d-inline-flex align-self-center mb-2"
@@ -37,72 +40,10 @@
 
 
 <!-- Begin Vue.js stuff -->
-
-<template id="claim-box-template">
-  <div class="mb-2">
-    <div class="card-block d-flex flex-column border">
-      <div id="claim-header"
-           class="d-flex justify-content-between
-                  border-b mb-3">
-        <h4 class="align-self-center">
-          <a id="claim-name"
-            style="color: black;"
-            href="{% url 'ClaimView' claim.id %}">
-            [[ claim.name ]]
-          </a>
-          <i class="fa fa-check"
-             v-if="[[ claim.affirmation_id ]] == ''"
-             v-on:click="toggleAffirmation"
-             title="Click here if you agree with this claim!"
-             style="color:#D5DBDB"
-             aria-hidden="true">
-          </i>
-          <i class="fa fa-check"
-             v-else
-             v-on:click="toggleAffirmation"
-             title="Click here to revoke your agreement with this claim!"
-             style="color:#27ae60"
-             aria-hidden="true">
-          </i>
-        </h4>
-        <div class="claim-box-nav d-flex">
-          <nav class="nav flex-row">
-            <a class="nav-link"
-                v-if="!claim.editing"
-                v-on:click="toggleEditing"
-                href="#">
-              Edit
-            </a>
-            <a class="nav-link"
-                v-if="claim.editing"
-                v-on:click="saveClaim"
-                href="#">
-              Save
-            </a>
-            <a class="nav-link"
-                v-show="claim.editing"
-                href="{% url 'ClaimView' claim.id %}">
-              Cancel
-            </a>
-          </nav>
-        </div>
-      </div>
-      <div id="claim-content"
-           class="card-text d-flex">
-        <p class="align-self-center mb-0"
-           v-if="!claim.editing">
-          [[ claim.content ]]
-        </p>
-        <textarea class="w-100"
-                  v-model="claim.content"
-                  v-else="">
-        </textarea>
-      </div>
-    </div>
-  </div>
-</template>
+{% include "claims/vue_templates.html" %}
 
 
+<!-- Pull in data for Vue.js -->
 <script id="test_json" type="text/javascript">
 test_json = {
   el: '#claim_single',
@@ -124,6 +65,7 @@ test_json = {
 };
 </script>
 
+<!-- Run Vue.js Javascript -->
 <script src="{% static 'js/claim_single.js' %}"></script>
 
 {% endblock %}
