@@ -18,15 +18,9 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 # functions!
 from . import functions as fcns
-# from functions import addClaimToGraph
-# from functions import addUserToGraph
-# from functions import addArgumentToGraph
-# from functions import addAffirmationToGraph
-# from functions import removeAffirmationFromGraph
-# from functions import sync_graph
+
 
 # Webpage Views
-
 
 # Claim Form
 @require_http_methods(["GET", "POST"])
@@ -92,33 +86,18 @@ def addArgument(request):
 # View Claim
 def ClaimView(request, claim):
 
+    # resync graph
     if request.user.is_authenticated():
         fcns.sync_graph(user=request.user)
 
+    # load up context with data for template + vue
     context = {}
-
-    # building context varianle for vue.js
     context["vue_claims"] = []
-    # for i, claim in enumerate(Claim.objects.get(pk=claim)):
-    context["vue_claims"].append({"claim": None,
-                                  "affirmation": None,
-                                  "num_affirmations": None,
-                                  "supporting_arguments": None,
-                                  "supported_arguments": None,
-                                  })
     claim_obj = Claim.objects.get(pk=claim)
-    context["vue_claims"][0]["claim"] = claim_obj
-    try:
-        affirmation_obj = Affirmation.objects.get(claim_id=claim,
-                                                  user_id=request.user)
-        context["vue_claims"][0]["affirmation"] = affirmation_obj
-    except Affirmation.DoesNotExist:
-        pass
-    num_affirmations = Affirmation.objects.filter(claim_id=claim).count()
-    context["vue_claims"][0]["num_affirmations"] = num_affirmations
-    supporting_arguments = Argument.objects.filter(supported_claim_id=claim)
-    context["vue_claims"][0]["supporting_arguments"] = supporting_arguments
-    print(context)
+    context = fcns.addClaimInfoToContextForVue(context=context,
+                                               user=request.user,
+                                               claim=claim_obj,
+                                               i=0)
 
     return render(request, "claims/claim_single.html", context)
 
@@ -159,45 +138,23 @@ def recommendations(request):
     return render(request, "claims/recommendations.html", context)
 
 
-# List all Claims
-# class ClaimListView(ListView):
-#     model = Claim
-
-
 # View Claim
 def ClaimListView(request):
 
+    # resync graph
     if request.user.is_authenticated():
         fcns.sync_graph(user=request.user)
 
+    # load up context with data for template + vue
     context = {}
-
-    # building context varianle for vue.js
     context["vue_claims"] = []
-
     for i, claim in enumerate(Claim.objects.all()):
-        context["vue_claims"].append({"claim": None,
-                                      "affirmation": None,
-                                      "num_affirmations": None,
-                                      "supporting_arguments": None,
-                                      "supported_arguments": None,
-                                      })
-        claim_obj = claim
-        context["vue_claims"][i]["claim"] = claim_obj
-        try:
-            affirmation_obj = Affirmation.objects.get(claim_id=claim,
-                                                      user_id=request.user)
-            context["vue_claims"][i]["affirmation"] = affirmation_obj
-        except Affirmation.DoesNotExist:
-            pass
-        num_affirmations = Affirmation.objects.filter(claim_id=claim).count()
-        context["vue_claims"][i]["num_affirmations"] = num_affirmations
-        supporting_arguments = Argument.objects.filter(supported_claim_id=claim)
-        context["vue_claims"][i]["supporting_arguments"] = supporting_arguments
-        print(context)
+        context = fcns.addClaimInfoToContextForVue(context=context,
+                                                   user=request.user,
+                                                   claim=claim,
+                                                   i=i)
 
-    return render(request, "claims/claim_single.html", context)
-
+    return render(request, "claims/claim_list.html", context)
 
 
 # List all Arguments

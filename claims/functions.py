@@ -6,6 +6,27 @@ from py2neo import authenticate, Graph, Node, Relationship
 from claims.models import Claim, Argument, Affirmation
 from django.contrib.auth.models import User
 
+# Prepare data for Vue.js
+def addClaimInfoToContextForVue(context, user, claim, i):
+    context["vue_claims"].append({"claim": None,
+                                  "affirmation": None,
+                                  "num_affirmations": None,
+                                  "supporting_arguments": None,
+                                  "supported_arguments": None,
+                                  })
+    claim_obj = claim
+    context["vue_claims"][i]["claim"] = claim_obj
+    try:
+        affirmation_obj = Affirmation.objects.get(claim_id=claim,
+                                                  user_id=user)
+        context["vue_claims"][i]["affirmation"] = affirmation_obj
+    except Affirmation.DoesNotExist:
+        pass
+    num_affirmations = Affirmation.objects.filter(claim_id=claim).count()
+    context["vue_claims"][i]["num_affirmations"] = num_affirmations
+    supporting_arguments = Argument.objects.filter(supported_claim_id=claim)
+    context["vue_claims"][i]["supporting_arguments"] = supporting_arguments
+    return context
 
 # Recommendations
 def getClaimRecommendations(user):
