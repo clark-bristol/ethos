@@ -4,40 +4,41 @@
 
 
 {% block content %}
+
   <div id="claim_single">
     <claim-box v-for="claim in claims"
            :claim="claim"
            :user="user">
     </claim-box>
   </div>
-<p>test!</p>
 
-{% include "claims/vue_templates.html" %}
+  {% include "claims/vue_templates.html" %}
 
-<!-- Pull in data for Vue.js -->
-<script id="test_json" type="text/javascript">
-  test_json = {
-    el: '#claim_single',
-    data: {
-      user: {
-        id: '{{ user.id }}',
-      },
-      claims: [
-        {% for claim in object_list %}
-          {
-            id: '{{ claim.id }}',
-            name: '{{ claim.name }}',
-            content: '{{ claim.content }}',
-            affirmation_id: '{{ affirmation.id }}',
-            num_affirmations: '{{ num_affirmations }}',
-            editing: false
-          },
-        {% endfor %}
-      ],
-    }
-  };
-</script>
+  <!-- Pull in data for Vue.js -->
+  <script id="test_json" type="text/javascript">
+    test_json = {
+      el: '#claim_single',
+      data: {
+        user: {
+          id: '{{ user.id }}',
+        },
+        claims: [
+          {% for claim in object_list %}
+            {
+              id: '{{ claim.id }}',
+              name: '{{ claim.name }}',
+              content: '{{ claim.content }}',
+              affirmation_id: '{{ affirmation.id }}',
+              num_affirmations: '{{ num_affirmations }}',
+              editing: false,
+              url: '{% url 'ClaimView' claim.id %}',
+            },
+          {% endfor %}
+        ],
+      }
+    };
+  </script>
 
-<script src="{% static 'js/claim_list.js' %}"></script>
+  <script src="{% static 'js/claim_list.js' %}"></script>
 
 {% endblock %}
