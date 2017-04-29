@@ -31,7 +31,7 @@ urlpatterns = [
     # Account-related URLs for Django-Registration-Redux
     url(r'^accounts/', include('registration.backends.default.urls')),
     # claims
-    url(r'^claims/$', claims_views.ClaimListView.as_view(), kwargs=None, name='browseClaims'),
+    url(r'^claims/$', claims_views.ClaimListView, kwargs=None, name='browseClaims'),
     url(r'^claims/contribute/$', claims_views.addClaim, kwargs=None, name='contributeClaim'),
     url(r'^claims/(?P<claim>[0-9]{1,10})/$', claims_views.ClaimView, kwargs=None, name='ClaimView'),
     # arguments

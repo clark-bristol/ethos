@@ -5,7 +5,7 @@
 
 {% block content %}
 
-  <div id="claim_single">
+  <div id="claim_list">
     <claim-box v-for="claim in claims"
            :claim="claim"
            :user="user">
@@ -17,21 +17,21 @@
   <!-- Pull in data for Vue.js -->
   <script id="test_json" type="text/javascript">
     test_json = {
-      el: '#claim_single',
+      el: '#claim_list',
       data: {
         user: {
           id: '{{ user.id }}',
         },
         claims: [
-          {% for claim in object_list %}
+          {% for vue_claim in vue_claims %}
             {
-              id: '{{ claim.id }}',
-              name: '{{ claim.name }}',
-              content: '{{ claim.content }}',
-              affirmation_id: '{{ affirmation.id }}',
-              num_affirmations: '{{ num_affirmations }}',
+              id: '{{ vue_claim.claim.id }}',
+              name: '{{ vue_claim.claim.name }}',
+              content: '{{ vue_claim.claim.content }}',
+              affirmation_id: '{{ vue_claim.affirmation.id }}',
+              num_affirmations: '{{ vue_claim.num_affirmations }}',
               editing: false,
-              url: '{% url 'ClaimView' claim.id %}',
+              url: '{% url 'ClaimView' vue_claim.claim.id %}',
             },
           {% endfor %}
         ],
