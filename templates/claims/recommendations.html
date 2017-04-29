@@ -2,17 +2,27 @@
 {% load staticfiles %}
 
 {% block content %}
+<div id="app">
   <h2>Hi, {{ request.user }}!</h2>
   <h4>Here are your recommended conclusions:</h4>
-  <div id="claim_list">
-    <claim-box v-for="claim in claims"
-           :claim="claim"
-           :user="user">
+
+    <claim-box
+      v-for="claim in claims"
+      v-if="claim.type == 'recd_concl'"
+      :claim="claim"
+      :user="user">
     </claim-box>
-  </div>
+
   <h4>Here are your recommended premises:</h4>
 
+    <claim-box
+      v-for="claim in claims"
+      v-if="claim.type == 'recd_premis'"
+      :claim="claim"
+      :user="user">
+    </claim-box>
 
+</div>
 
 
   {% include "claims/vue_templates.html" %}
@@ -20,7 +30,7 @@
   <!-- Pull in data for Vue.js -->
   <script id="test_json" type="text/javascript">
     vm_config = {
-      el: '#claim_list',
+      el: '#app',
       data: {
         user: {
           id: '{{ user.id }}',
@@ -34,7 +44,7 @@
               affirmation_id: '{{ vue_claim.affirmation.id }}',
               num_affirmations: '{{ vue_claim.num_affirmations }}',
               editing: false,
-              url: '{% url 'ClaimView' vue_claim.claim.id %}',
+              type: '{{ vue_claim.type }}',
             },
           {% endfor %}
         ],

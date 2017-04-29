@@ -68,7 +68,8 @@ def addArgument(request):
         new_argument.save()
 
         for claim_id in request.POST.getlist('premise_claims'):
-            ArgumentPremise.objects.create(claim_id=int(claim_id), argument=new_argument)
+            ArgumentPremise.objects.create(claim_id=int(claim_id),
+                                           argument=new_argument)
 
         fcns.addArgumentToGraph(new_argument)
 
@@ -94,10 +95,11 @@ def ClaimView(request, claim):
     context = {}
     context["vue_claims"] = []
     claim_obj = Claim.objects.get(pk=claim)
-    context = fcns.addClaimInfoToContextForVue(context=context,
-                                               user=request.user,
-                                               claim=claim_obj,
-                                               i=0)
+    context = fcns.addClaimInfoToContextForVue(
+        context=context,
+        user=request.user,
+        claim=claim_obj,
+        claim_type="displayed")
 
     return render(request, "claims/claim_single.html", context)
 
@@ -123,27 +125,17 @@ def recommendations(request):
 
     # get list of recommended claims
     rl = fcns.getClaimRecommendations(request.user)
-    print(type(rl))
-    rl_concls = [x for x in rl if x['rec_type'] == 'conclusion']
-    # rl_concls = filter(lambda x: x['rec_type'] == 'conclusion', rl)
-    rl_concl_ids = [rl_concls[a][0] for a in range(len(rl_concls))]
-    rl_concl_claims = Claim.objects.filter(pk__in=rl_concl_ids)
-    context["recommended_conclusions"] = rl_concl_claims
 
+    # add recommended conclusions to context
     context["vue_claims"] = []
-    for i, claim in enumerate(rl_concl_claims):
-        context = fcns.addClaimInfoToContextForVue(context=context,
-                                                   user=request.user,
-                                                   claim=claim,
-                                                   i=i)
-    print(context)
-
-    # get list of recommended claims
-    # rl = fcns.getClaimRecommendations(request.user)
-    # rl_premises = filter(lambda x: x['rec_type'] == 'premise', rl)
-    # rl_premise_ids = [rl_premises[a][0] for a in range(len(rl_premises))]
-    # rl_premise_claims = Claim.objects.filter(pk__in=rl_premise_ids)
-    # context["recommended_premises"] = rl_premise_claims
+    for rec in rl:
+        recd_claim = Claim.objects.get(pk=rec[0])
+        rec_type = rec[1]
+        context = fcns.addClaimInfoToContextForVue(
+            context=context,
+            user=request.user,
+            claim=recd_claim,
+            claim_type=rec_type)
 
     return render(request, "claims/recommendations.html", context)
 
@@ -159,10 +151,11 @@ def ClaimListView(request):
     context = {}
     context["vue_claims"] = []
     for i, claim in enumerate(Claim.objects.all()):
-        context = fcns.addClaimInfoToContextForVue(context=context,
-                                                   user=request.user,
-                                                   claim=claim,
-                                                   i=i)
+        context = fcns.addClaimInfoToContextForVue(
+            context=context,
+            user=request.user,
+            claim=claim,
+            claim_type="displayed")
 
     return render(request, "claims/claim_list.html", context)
 

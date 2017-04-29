@@ -6,26 +6,27 @@ from py2neo import authenticate, Graph, Node, Relationship
 from claims.models import Claim, Argument, Affirmation
 from django.contrib.auth.models import User
 
+
 # Prepare data for Vue.js
-def addClaimInfoToContextForVue(context, user, claim, i):
-    context["vue_claims"].append({"claim": None,
-                                  "affirmation": None,
-                                  "num_affirmations": None,
-                                  "supporting_arguments": None,
-                                  "supported_arguments": None,
-                                  })
-    claim_obj = claim
-    context["vue_claims"][i]["claim"] = claim_obj
+def addClaimInfoToContextForVue(context, user, claim, claim_type):
+
     try:
         affirmation_obj = Affirmation.objects.get(claim_id=claim,
                                                   user_id=user)
-        context["vue_claims"][i]["affirmation"] = affirmation_obj
     except Affirmation.DoesNotExist:
-        pass
+        affirmation_obj = None
+
     num_affirmations = Affirmation.objects.filter(claim_id=claim).count()
-    context["vue_claims"][i]["num_affirmations"] = num_affirmations
     supporting_arguments = Argument.objects.filter(supported_claim_id=claim)
-    context["vue_claims"][i]["supporting_arguments"] = supporting_arguments
+
+    context["vue_claims"].append({"claim": claim,
+                                  "type": claim_type,
+                                  "affirmation": affirmation_obj,
+                                  "num_affirmations": num_affirmations,
+                                  "supporting_arguments": supporting_arguments,
+                                  "supported_arguments": None,
+                                  })
+
     return context
 
 # Recommendations
@@ -42,7 +43,7 @@ def getClaimRecommendations(user):
         WHERE NOT (u)-[:Affirms]->(cc) // where the user does not already affirm the argument's conclusion
         WITH u, a, cc, COLLECT(sc) AS supporting_claims
         WHERE ALL (sc IN supporting_claims WHERE (u)-[:Affirms]->(sc)) // where the user affirms all supporting claims of the argument
-        RETURN cc.claim_id AS claim_id, 'conclusion' AS rec_type
+        RETURN cc.claim_id AS claim_id, 'recd_concl' AS rec_type
         ''' % (user.id)
 
     rec_list = list(graph.run(query_conclusions))
@@ -57,7 +58,7 @@ def getClaimRecommendations(user):
         // return the premises that the user does not yet affirm
         WITH u, a, cc, sc
         WHERE NOT (u)-[:Affirms]->(sc)
-        RETURN sc.claim_id AS claim_id, 'premise' AS rec_type
+        RETURN sc.claim_id AS claim_id, 'recd_premis' AS rec_type
         ''' % (user.id)
 
     # get query results as a list of named tuples

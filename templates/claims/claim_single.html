@@ -61,6 +61,7 @@ vm_config = {
           num_affirmations: '{{ vue_claim.num_affirmations }}',
           editing: false,
           url: '{% url 'ClaimView' vue_claim.claim.id %}',
+          type: '{{ vue_claim.type }}',
         },
       {% endfor %}
     ],
