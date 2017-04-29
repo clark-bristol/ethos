@@ -97,6 +97,29 @@ def ClaimView(request, claim):
 
     context = {}
 
+    # building context varianle for vue.js
+    context["vue_claims"] = []
+    # for i, claim in enumerate(Claim.objects.get(pk=claim)):
+    context["vue_claims"].append({"claim": None,
+                                  "affirmation": None,
+                                  "num_affirmations": None,
+                                  "supporting_arguments": None,
+                                  "supported_arguments": None,
+                                  })
+    claim_obj = Claim.objects.get(pk=claim)
+    context["vue_claims"][0]["claim"] = claim_obj
+    try:
+        affirmation_obj = Affirmation.objects.get(claim_id=claim,
+                                                  user_id=request.user)
+        context["vue_claims"][0]["affirmation"] = affirmation_obj
+    except Affirmation.DoesNotExist:
+        pass
+    num_affirmations = Affirmation.objects.filter(claim_id=claim).count()
+    context["vue_claims"][0]["num_affirmations"] = num_affirmations
+    supporting_arguments = Argument.objects.filter(supported_claim_id=claim)
+    context["vue_claims"][0]["supporting_arguments"] = supporting_arguments
+    print(context["vue_claims"][0])
+
     try:
         this_claim = Claim.objects.get(pk=claim)
     except Claim.DoesNotExist:
@@ -154,6 +177,33 @@ def recommendations(request):
 # List all Claims
 class ClaimListView(ListView):
     model = Claim
+
+
+# # View Claim
+# def ClaimListView(request, claim):
+
+#     if request.user.is_authenticated():
+#         fcns.sync_graph(user=request.user)
+
+#     context = {}
+
+#     try:
+#         this_claim = Claim.objects.all()
+#     except Claim.DoesNotExist:
+#         raise Http404("Claim does not exist")
+
+#     try:
+#         context["affirmation"] = Affirmation.objects.get(claim_id=claim, user_id=request.user)
+#     except Affirmation.DoesNotExist:
+#         context["affirmation"] = None
+
+#     context["claim"] = this_claim
+#     context["num_affirmations"] = Affirmation.objects.filter(claim_id=claim).count()
+#     context["supporting_arguments"] = Argument.objects.filter(supported_claim_id=claim)
+#     # context["suggested_claims"] =
+
+#     return render(request, "claims/claim_single.html", context)
+
 
 
 # List all Arguments
