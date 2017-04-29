@@ -1,17 +1,48 @@
-<!-- https://docs.djangoproject.com/en/1.9/topics/class-based-views/generic-display/ -->
-
 {% extends "base.html" %}
-
+{% load staticfiles %}
 
 {% block content %}
   <h2>Hi, {{ request.user }}!</h2>
   <h4>Here are your recommended conclusions:</h4>
-  {% for claim in recommended_conclusions %}
-    {% include "claims/claim.html" %}
-  {% endfor %}
+  <div id="claim_list">
+    <claim-box v-for="claim in claims"
+           :claim="claim"
+           :user="user">
+    </claim-box>
+  </div>
   <h4>Here are your recommended premises:</h4>
-  {% for claim in recommended_premises %}
-    {% include "claims/claim.html" %}
-  {% endfor %}
+
+
+
+
+  {% include "claims/vue_templates.html" %}
+
+  <!-- Pull in data for Vue.js -->
+  <script id="test_json" type="text/javascript">
+    test_json = {
+      el: '#claim_list',
+      data: {
+        user: {
+          id: '{{ user.id }}',
+        },
+        claims: [
+          {% for vue_claim in vue_claims %}
+            {
+              id: '{{ vue_claim.claim.id }}',
+              name: '{{ vue_claim.claim.name }}',
+              content: '{{ vue_claim.claim.content }}',
+              affirmation_id: '{{ vue_claim.affirmation.id }}',
+              num_affirmations: '{{ vue_claim.num_affirmations }}',
+              editing: false,
+              url: '{% url 'ClaimView' vue_claim.claim.id %}',
+            },
+          {% endfor %}
+        ],
+      }
+    };
+  </script>
+
+  <script src="{% static 'js/recommendations.js' %}"></script>
+
 {% endblock %}
 

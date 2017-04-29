@@ -123,17 +123,27 @@ def recommendations(request):
 
     # get list of recommended claims
     rl = fcns.getClaimRecommendations(request.user)
-    rl_concls = filter(lambda x: x['rec_type'] == 'conclusion', rl)
+    print(type(rl))
+    rl_concls = [x for x in rl if x['rec_type'] == 'conclusion']
+    # rl_concls = filter(lambda x: x['rec_type'] == 'conclusion', rl)
     rl_concl_ids = [rl_concls[a][0] for a in range(len(rl_concls))]
     rl_concl_claims = Claim.objects.filter(pk__in=rl_concl_ids)
     context["recommended_conclusions"] = rl_concl_claims
 
+    context["vue_claims"] = []
+    for i, claim in enumerate(rl_concl_claims):
+        context = fcns.addClaimInfoToContextForVue(context=context,
+                                                   user=request.user,
+                                                   claim=claim,
+                                                   i=i)
+    print(context)
+
     # get list of recommended claims
-    rl = getClaimRecommendations(request.user)
-    rl_premises = filter(lambda x: x['rec_type'] == 'premise', rl)
-    rl_premise_ids = [rl_premises[a][0] for a in range(len(rl_premises))]
-    rl_premise_claims = Claim.objects.filter(pk__in=rl_premise_ids)
-    context["recommended_premises"] = rl_premise_claims
+    # rl = fcns.getClaimRecommendations(request.user)
+    # rl_premises = filter(lambda x: x['rec_type'] == 'premise', rl)
+    # rl_premise_ids = [rl_premises[a][0] for a in range(len(rl_premises))]
+    # rl_premise_claims = Claim.objects.filter(pk__in=rl_premise_ids)
+    # context["recommended_premises"] = rl_premise_claims
 
     return render(request, "claims/recommendations.html", context)
 
